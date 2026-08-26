@@ -1,0 +1,32 @@
+name: Initialize Certificates
+
+on:
+  workflow_dispatch:
+    inputs:
+      readonly:
+        description: 'Set to false to create certificates'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  setup:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Run Fastlane Match
+        run: bundle exec fastlane match appstore --readonly ${{ inputs.readonly }}
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
