@@ -23,11 +23,6 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane
 
-      - name: Configure Git Auth
-        run: |
-          git config --global credential.helper store
-          echo "https://${{ secrets.MATCH_GITHUB_USERNAME }}:${{ secrets.MATCH_GIT_TOKEN }}@github.com" > ~/.git-credentials
-
       - name: Cache Godot Editor & Templates
         id: cache-godot
         uses: actions/cache@v4
@@ -61,7 +56,7 @@ jobs:
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_GIT_URL: "https://${{ secrets.MATCH_GITHUB_USERNAME }}:${{ secrets.MATCH_GIT_TOKEN }}@github.com/${{ secrets.MATCH_GITHUB_USERNAME }}/${{ secrets.MATCH_GITHUB_REPO }}.git"
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
         run: |
           fastlane deploy_testflight
