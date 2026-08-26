@@ -25,12 +25,15 @@ jobs:
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
 
+      - name: Export .p12 from Keychain
+        run: |
+          mkdir -p build/certs
+          security export -k ~/Library/Keychains/login.keychain-db -t pkcs12 -o build/certs/certificate.p12 -P ""
+
       - name: Upload Certificate Files
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ios-certificates
-          path: |
-            build/certs/*.p12
-            build/certs/*.cer
+          path: build/certs/certificate.p12
           retention-days: 30
