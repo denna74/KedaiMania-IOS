@@ -25,9 +25,9 @@ jobs:
         run: gem install fastlane
 
       - name: Run Fastlane Match
-        run: fastlane match appstore --readonly ${{ inputs.readonly }}
+        run: fastlane match appstore --readonly ${{ inputs.readonly }} --force_for_new_certificates
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
-          MATCH_GIT_AUTHORIZATION: ${{ secrets.MATCH_GIT_AUTHORIZATION }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
