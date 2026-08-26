@@ -28,7 +28,7 @@ jobs:
       - name: Export .p12 from Keychain
         run: |
           mkdir -p build/certs
-          security export -k ~/Library/Keychains/login.keychain-db -t pkcs12 -o build/certs/certificate.p12 -P ""
+          security export -k ~/Library/Keychains/login.keychain-db -t identities -f pkcs12 -o build/certs/certificate.p12 -P ""
 
       - name: Upload Certificate Files
         if: always()
