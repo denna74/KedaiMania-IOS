@@ -24,3 +24,13 @@ jobs:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
+
+      - name: Upload Certificate Files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-certificates
+          path: |
+            build/certs/*.p12
+            build/certs/*.cer
+          retention-days: 30
