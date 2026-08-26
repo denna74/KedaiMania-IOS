@@ -1,0 +1,51 @@
+{
+	"persons": [
+		{"name": "Ali", "gender": "male"},
+		{"name": "Budi", "gender": "male"},
+		{"name": "Citra", "gender": "female"},
+		{"name": "Dewi", "gender": "female"},
+		{"name": "Eko", "gender": "male"},
+		{"name": "Taufik", "gender": "male"},
+		{"name": "Fitri", "gender": "female"},
+		{"name": "Gilang", "gender": "male"},
+		{"name": "Hana", "gender": "female"},
+		{"name": "Lisa", "gender": "female"},
+		{"name": "Indri", "gender": "female"},
+		{"name": "Maria", "gender": "female"},
+		{"name": "Susi", "gender": "female"},
+		{"name": "Candra", "gender": "male"},
+		{"name": "Hendra", "gender": "male"},
+		{"name": "Indra", "gender": "male"}
+	],
+	"textures": [
+		{"image": "npc_01_elderly_man_blue_batik.png", "gender": "male"},
+		{"image": "npc_02_elderly_man_green_shirt.png", "gender": "male"},
+		{"image": "npc_03_elderly_man_glasses.png", "gender": "male"},
+		{"image": "npc_04_elderly_man_purple_batik.png", "gender": "male"},
+		{"image": "npc_05_elderly_man_orange_batik.png", "gender": "male"},
+		{"image": "npc_06_elderly_woman_gold_kebaya.png", "gender": "female"},
+		{"image": "npc_07_elderly_woman_pink_kebaya.png", "gender": "female"},
+		{"image": "npc_08_elderly_woman_teal_kebaya.png", "gender": "female"},
+		{"image": "npc_09_elderly_woman_magenta_kebaya.png", "gender": "female"},
+		{"image": "npc_10_elderly_woman_purple_kebaya.png", "gender": "female"},
+		{"image": "npc_11_adult_man_brown_batik.png", "gender": "male"},
+		{"image": "npc_12_adult_man_dark_batik.png", "gender": "male"},
+		{"image": "npc_13_adult_man_mustache_batik.png", "gender": "male"},
+		{"image": "npc_14_adult_man_gray_hair.png", "gender": "male"},
+		{"image": "npc_15_adult_woman_pink_batik.png", "gender": "female"},
+		{"image": "npc_16_child_boy_blue_shirt.png", "gender": "male"},
+		{"image": "npc_17_child_girl_braids.png", "gender": "female"},
+		{"image": "npc_18_child_boy_mohawk.png", "gender": "male"},
+		{"image": "npc_19_child_girl_purple.png", "gender": "female"},
+		{"image": "npc_20_child_boy_peci.png", "gender": "male"}
+	],
+	"step_names": {
+		"CUTTING": "potong",
+		"COOKING": "masak",
+		"MIXING": "campur",
+		"SERVING": "saji",
+		"PACKING": "bungkus",
+		"GRILL": "bakar",
+		"SPICE_UP": "racik"
+	}
+}

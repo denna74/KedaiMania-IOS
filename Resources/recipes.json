@@ -1,0 +1,2928 @@
+{
+  "nasi_goreng": [
+	{
+	  "ingredients": [
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8000,
+	  "fund": 5000,
+	  "color": [
+		0.9,
+		0.4,
+		0.05
+	  ],
+	  "id": "telur_dadar"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 15000,
+	  "fund": 10000,
+	  "color": [
+		0.95,
+		0.75,
+		0.15
+	  ],
+	  "id": "nasi_goreng_ayam"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 13000,
+	  "fund": 8000,
+	  "color": [
+		0.85,
+		0.65,
+		0.1
+	  ],
+	  "id": "mie_goreng_ayam"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 16000,
+	  "fund": 11000,
+	  "color": [
+		0.4,
+		0.6,
+		0.8
+	  ],
+	  "id": "kwetiau_goreng_ayam"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 16000,
+	  "fund": 10000,
+	  "color": [
+		0.2,
+		0.8,
+		0.2
+	  ],
+	  "id": "capcay_goreng_ayam"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 14000,
+	  "fund": 9000,
+	  "color": [
+		0.6,
+		0.8,
+		0.4
+	  ],
+	  "id": "mie_rebus_ayam"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 18000,
+	  "fund": 13000,
+	  "color": [
+		0.9,
+		0.7,
+		0.1
+	  ],
+	  "id": "nasi_goreng_seafood"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 17000,
+	  "fund": 12000,
+	  "color": [
+		0.6,
+		0.5,
+		0.8
+	  ],
+	  "id": "kwetiau_siram_ayam"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 18000,
+	  "fund": 12000,
+	  "color": [
+		0.15,
+		0.75,
+		0.15
+	  ],
+	  "id": "capcay_goreng_seafood"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 15000,
+	  "fund": 12000,
+	  "color": [
+		0.8,
+		0.6,
+		0.1
+	  ],
+	  "id": "mie_goreng_seafood"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 14000,
+	  "fund": 11000,
+	  "color": [
+		0.85,
+		0.55,
+		0.3
+	  ],
+	  "id": "bihun_goreng_ayam"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 20000,
+	  "fund": 15000,
+	  "color": [
+		0.85,
+		0.6,
+		0.05
+	  ],
+	  "id": "nasi_goreng_gila"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 18000,
+	  "fund": 13000,
+	  "color": [
+		0.35,
+		0.55,
+		0.75
+	  ],
+	  "id": "kwetiau_goreng_seafood"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 18000,
+	  "fund": 13000,
+	  "color": [
+		0.5,
+		0.75,
+		0.35
+	  ],
+	  "id": "mie_rebus_seafood"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 15000,
+	  "fund": 10000,
+	  "color": [
+		0.3,
+		0.7,
+		0.5
+	  ],
+	  "id": "capcay_kuah_ayam"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 18000,
+	  "fund": 13000,
+	  "color": [
+		0.8,
+		0.5,
+		0.25
+	  ],
+	  "id": "bihun_goreng_seafood"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 19000,
+	  "fund": 14000,
+	  "color": [
+		0.8,
+		0.65,
+		0.1
+	  ],
+	  "id": "nasi_goreng_mawut"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 19000,
+	  "fund": 14000,
+	  "color": [
+		0.55,
+		0.45,
+		0.75
+	  ],
+	  "id": "kwetiau_siram_seafood"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 19000,
+	  "fund": 12000,
+	  "color": [
+		0.25,
+		0.65,
+		0.45
+	  ],
+	  "id": "capcay_kuah_seafood"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 4.0,
+	  "price": 25000,
+	  "fund": 20000,
+	  "color": [
+		0.95,
+		0.8,
+		0.2
+	  ],
+	  "id": "nasi_goreng_special"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 14000,
+	  "fund": 10000,
+	  "color": [
+		0.82,
+		0.52,
+		0.28
+	  ],
+	  "id": "bihun_goreng_bakso"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 13000,
+	  "fund": 9000,
+	  "color": [
+		0.78,
+		0.48,
+		0.22
+	  ],
+	  "id": "bihun_goreng_sosis"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 22000,
+	  "fund": 17000,
+	  "color": [
+		0.88,
+		0.58,
+		0.32
+	  ],
+	  "id": "bihun_goreng_special"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 10000,
+	  "fund": 6000,
+	  "color": [
+		0.15,
+		0.75,
+		0.15
+	  ],
+	  "id": "cah_kangkung_polos"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 16000,
+	  "fund": 11000,
+	  "color": [
+		0.1,
+		0.7,
+		0.1
+	  ],
+	  "id": "cah_kangkung_seafood"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 22000,
+	  "fund": 16000,
+	  "color": [
+		0.25,
+		0.78,
+		0.2
+	  ],
+	  "id": "capcay_goreng_special"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 22000,
+	  "fund": 16000,
+	  "color": [
+		0.2,
+		0.68,
+		0.45
+	  ],
+	  "id": "capcay_kuah_special"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"MIXING",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 14000,
+	  "fund": 9000,
+	  "color": [
+		0.95,
+		0.7,
+		0.15
+	  ],
+	  "id": "fuyunghai_ayam"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"MIXING",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 18000,
+	  "fund": 13000,
+	  "color": [
+		0.9,
+		0.65,
+		0.1
+	  ],
+	  "id": "fuyunghai_seafood"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 17000,
+	  "fund": 12000,
+	  "color": [
+		0.45,
+		0.6,
+		0.75
+	  ],
+	  "id": "kwetiau_nyemek_ayam"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 22000,
+	  "fund": 17000,
+	  "color": [
+		0.9,
+		0.7,
+		0.15
+	  ],
+	  "id": "mie_goreng_special"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 15000,
+	  "fund": 10000,
+	  "color": [
+		0.8,
+		0.6,
+		0.05
+	  ],
+	  "id": "mie_nyemek_ayam"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 22000,
+	  "fund": 17000,
+	  "color": [
+		0.85,
+		0.65,
+		0.1
+	  ],
+	  "id": "mie_nyemek_special"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 15000,
+	  "fund": 10000,
+	  "color": [
+		0.92,
+		0.72,
+		0.12
+	  ],
+	  "id": "nasi_goreng_bakso"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 22000,
+	  "fund": 17000,
+	  "color": [
+		0.75,
+		0.45,
+		0.2
+	  ],
+	  "id": "nasi_goreng_kambing"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 17000,
+	  "fund": 12000,
+	  "color": [
+		0.7,
+		0.8,
+		0.2
+	  ],
+	  "id": "nasi_goreng_pete"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 14000,
+	  "fund": 9000,
+	  "color": [
+		0.88,
+		0.68,
+		0.1
+	  ],
+	  "id": "nasi_goreng_sosis"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 16000,
+	  "fund": 11000,
+	  "color": [
+		0.6,
+		0.55,
+		0.35
+	  ],
+	  "id": "nasi_goreng_teri_medan"
+	}
+  ],
+  "pecel_lele": [
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 16000,
+	  "fund": 11000,
+	  "color": [
+		0.85,
+		0.6,
+		0.2
+	  ],
+	  "id": "nasi_pecel_lele_goreng"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 17000,
+	  "fund": 12000,
+	  "color": [
+		0.75,
+		0.55,
+		0.15
+	  ],
+	  "id": "nasi_pecel_lele_bakar"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 23000,
+	  "fund": 18000,
+	  "color": [
+		0.9,
+		0.65,
+		0.25
+	  ],
+	  "id": "nasi_pecel_lele_double"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 19000,
+	  "fund": 14000,
+	  "color": [
+		0.95,
+		0.7,
+		0.15
+	  ],
+	  "id": "nasi_ayam_goreng"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 20000,
+	  "fund": 15000,
+	  "color": [
+		0.7,
+		0.5,
+		0.15
+	  ],
+	  "id": "nasi_ayam_bakar"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 26000,
+	  "fund": 21000,
+	  "color": [
+		0.55,
+		0.35,
+		0.2
+	  ],
+	  "id": "nasi_bebek_goreng"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"GRILL"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 27000,
+	  "fund": 22000,
+	  "color": [
+		0.5,
+		0.3,
+		0.15
+	  ],
+	  "id": "nasi_bebek_bakar"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 18000,
+	  "fund": 13000,
+	  "color": [
+		0.8,
+		0.65,
+		0.3
+	  ],
+	  "id": "nasi_ikan_nila_goreng"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 21000,
+	  "fund": 13000,
+	  "color": [
+		0.7,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_ikan_nila_bakar"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 21000,
+	  "fund": 16000,
+	  "color": [
+		0.85,
+		0.6,
+		0.35
+	  ],
+	  "id": "nasi_ikan_bawal_goreng"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 30000,
+	  "fund": 25000,
+	  "color": [
+		0.75,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_ikan_gurame_goreng"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 20000,
+	  "fund": 15000,
+	  "color": [
+		0.9,
+		0.55,
+		0.25
+	  ],
+	  "id": "nasi_udang_goreng_tepung"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 20000,
+	  "fund": 15000,
+	  "color": [
+		0.65,
+		0.5,
+		0.3
+	  ],
+	  "id": "nasi_cumi_goreng_tepung"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 13000,
+	  "fund": 8000,
+	  "color": [
+		0.7,
+		0.35,
+		0.2
+	  ],
+	  "id": "nasi_ati_ampela_goreng"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 22000,
+	  "fund": 17000,
+	  "color": [
+		0.72,
+		0.55,
+		0.2
+	  ],
+	  "id": "nasi_ikan_bawal_bakar"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 14000,
+	  "fund": 9000,
+	  "color": [
+		0.85,
+		0.45,
+		0.15
+	  ],
+	  "id": "nasi_usus_ayam_crispy"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 12000,
+	  "fund": 7000,
+	  "color": [
+		0.95,
+		0.7,
+		0.1
+	  ],
+	  "id": "nasi_telur_penyet"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 15000,
+	  "fund": 10000,
+	  "color": [
+		0.8,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kulit_ayam_krispi"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 13000,
+	  "fund": 8000,
+	  "color": [
+		0.6,
+		0.55,
+		0.25
+	  ],
+	  "id": "nasi_tahu_tempe_penyet"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"GRILL"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 31000,
+	  "fund": 26000,
+	  "color": [
+		0.65,
+		0.45,
+		0.15
+	  ],
+	  "id": "nasi_ikan_gurame_bakar"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 21000,
+	  "fund": 16000,
+	  "color": [
+		0.75,
+		0.4,
+		0.25
+	  ],
+	  "id": "nasi_burung_puyuh_goreng"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 22000,
+	  "fund": 17000,
+	  "color": [
+		0.6,
+		0.35,
+		0.2
+	  ],
+	  "id": "nasi_burung_puyuh_bakar"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 17000,
+	  "fund": 12000,
+	  "color": [
+		0.85,
+		0.55,
+		0.2
+	  ],
+	  "id": "nasi_lele_penyet"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 20000,
+	  "fund": 15000,
+	  "color": [
+		0.9,
+		0.6,
+		0.15
+	  ],
+	  "id": "nasi_ayam_penyet"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 28000,
+	  "fund": 23000,
+	  "color": [
+		0.5,
+		0.3,
+		0.15
+	  ],
+	  "id": "nasi_bebek_penyet"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 21000,
+	  "fund": 16000,
+	  "color": [
+		0.85,
+		0.65,
+		0.2
+	  ],
+	  "id": "nasi_udang_bakar"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 21000,
+	  "fund": 16000,
+	  "color": [
+		0.6,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_cumi_bakar"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 19000,
+	  "fund": 14000,
+	  "color": [
+		0.65,
+		0.35,
+		0.2
+	  ],
+	  "id": "nasi_paru_goreng"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 22000,
+	  "fund": 13000,
+	  "color": [
+		0.55,
+		0.35,
+		0.2
+	  ],
+	  "id": "nasi_babat_goreng"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 23000,
+	  "fund": 18000,
+	  "color": [
+		0.7,
+		0.35,
+		0.2
+	  ],
+	  "id": "nasi_burung_puyuh_penyet"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 12000,
+	  "fund": 7000,
+	  "color": [
+		0.5,
+		0.35,
+		0.3
+	  ],
+	  "id": "nasi_terong_penyet"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 21000,
+	  "fund": 16000,
+	  "color": [
+		0.9,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_udang_asam_manis"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 21000,
+	  "fund": 16000,
+	  "color": [
+		0.7,
+		0.45,
+		0.2
+	  ],
+	  "id": "nasi_cumi_asam_manis"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 20000,
+	  "fund": 15000,
+	  "color": [
+		0.5,
+		0.35,
+		0.2
+	  ],
+	  "id": "nasi_babat_penyet"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"CUTTING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 20000,
+	  "fund": 15000,
+	  "color": [
+		0.6,
+		0.3,
+		0.15
+	  ],
+	  "id": "nasi_paru_penyet"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 28000,
+	  "fund": 23000,
+	  "color": [
+		0.3,
+		0.65,
+		0.25
+	  ],
+	  "id": "nasi_bebek_sambal_ijo"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 21000,
+	  "fund": 16000,
+	  "color": [
+		0.35,
+		0.7,
+		0.2
+	  ],
+	  "id": "nasi_ayam_sambal_ijo"
+	},
+	{
+	  "ingredients": [
+		"CUTTING",
+		"COOKING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 18000,
+	  "fund": 13000,
+	  "color": [
+		0.4,
+		0.6,
+		0.2
+	  ],
+	  "id": "nasi_lele_sambal_ijo"
+	}
+  ],
+  "nasi_padang": [
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 8000,
+	  "fund": 5000,
+	  "color": [
+		0.3,
+		0.6,
+		0.2
+	  ],
+	  "id": "nasi_gulai_daun_singkong"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 9000,
+	  "fund": 5500,
+	  "color": [
+		0.75,
+		0.65,
+		0.3
+	  ],
+	  "id": "nasi_tahu_tempe_goreng"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 9000,
+	  "fund": 5500,
+	  "color": [
+		0.35,
+		0.55,
+		0.2
+	  ],
+	  "id": "nasi_gulai_pakis"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 10000,
+	  "fund": 6000,
+	  "color": [
+		0.7,
+		0.6,
+		0.25
+	  ],
+	  "id": "nasi_ikan_teri_kacang"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 10000,
+	  "fund": 6000,
+	  "color": [
+		0.5,
+		0.35,
+		0.6
+	  ],
+	  "id": "nasi_terong_balado"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 11000,
+	  "fund": 6500,
+	  "color": [
+		0.85,
+		0.7,
+		0.2
+	  ],
+	  "id": "nasi_perkedel_kentang"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 12000,
+	  "fund": 7000,
+	  "color": [
+		0.9,
+		0.5,
+		0.1
+	  ],
+	  "id": "nasi_telur_bulat_balado"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 12000,
+	  "fund": 7000,
+	  "color": [
+		0.5,
+		0.7,
+		0.3
+	  ],
+	  "id": "nasi_gulai_kapau"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 13500,
+	  "fund": 8000,
+	  "color": [
+		0.85,
+		0.55,
+		0.15
+	  ],
+	  "id": "nasi_telur_barendo"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 14000,
+	  "fund": 8000,
+	  "color": [
+		0.75,
+		0.3,
+		0.15
+	  ],
+	  "id": "nasi_sambal_ati_ampela"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 17000,
+	  "fund": 10500,
+	  "color": [
+		0.9,
+		0.5,
+		0.15
+	  ],
+	  "id": "nasi_ikan_tongkol_asam_padeh"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 18000,
+	  "fund": 11000,
+	  "color": [
+		0.6,
+		0.55,
+		0.3
+	  ],
+	  "id": "nasi_ikan_bilih"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 19000,
+	  "fund": 11500,
+	  "color": [
+		0.3,
+		0.65,
+		0.2
+	  ],
+	  "id": "nasi_ayam_cabai_hijau_lado_mudo"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 19000,
+	  "fund": 11500,
+	  "color": [
+		0.8,
+		0.6,
+		0.2
+	  ],
+	  "id": "nasi_ayam_goreng_bumbu_serundeng"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 19000,
+	  "fund": 11500,
+	  "color": [
+		0.65,
+		0.45,
+		0.2
+	  ],
+	  "id": "nasi_ikan_kembung_bakar_padang"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 20000,
+	  "fund": 12000,
+	  "color": [
+		0.75,
+		0.55,
+		0.2
+	  ],
+	  "id": "nasi_ayam_goreng_laos"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 20000,
+	  "fund": 12000,
+	  "color": [
+		0.9,
+		0.7,
+		0.15
+	  ],
+	  "id": "nasi_ayam_gulai"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 20000,
+	  "fund": 12000,
+	  "color": [
+		0.85,
+		0.75,
+		0.6
+	  ],
+	  "id": "nasi_ayam_pop"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 20000,
+	  "fund": 12000,
+	  "color": [
+		0.7,
+		0.65,
+		0.2
+	  ],
+	  "id": "nasi_ikan_mas_arsik"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 20000,
+	  "fund": 12000,
+	  "color": [
+		0.65,
+		0.35,
+		0.2
+	  ],
+	  "id": "nasi_paru_goreng_crispy"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"GRILL",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 21000,
+	  "fund": 12500,
+	  "color": [
+		0.8,
+		0.4,
+		0.15
+	  ],
+	  "id": "nasi_ayam_bakar_padang"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 22000,
+	  "fund": 13000,
+	  "color": [
+		0.55,
+		0.35,
+		0.2
+	  ],
+	  "id": "nasi_babat_goreng"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 21000,
+	  "fund": 13000,
+	  "color": [
+		0.7,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_ikan_nila_bakar"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 21000,
+	  "fund": 13000,
+	  "color": [
+		0.9,
+		0.65,
+		0.2
+	  ],
+	  "id": "nasi_gulai_babat_iso"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 22000,
+	  "fund": 13000,
+	  "color": [
+		0.6,
+		0.35,
+		0.25
+	  ],
+	  "id": "nasi_limpa_goreng"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 22000,
+	  "fund": 13500,
+	  "color": [
+		0.65,
+		0.35,
+		0.2
+	  ],
+	  "id": "nasi_gulai_hati_sapi"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 23000,
+	  "fund": 14000,
+	  "color": [
+		0.85,
+		0.45,
+		0.15
+	  ],
+	  "id": "nasi_udang_balado"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 23000,
+	  "fund": 14000,
+	  "color": [
+		0.75,
+		0.65,
+		0.5
+	  ],
+	  "id": "nasi_gulai_otak_sapi"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 24000,
+	  "fund": 14500,
+	  "color": [
+		0.8,
+		0.3,
+		0.1
+	  ],
+	  "id": "nasi_dendeng_balado_kering_sariakik"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 24000,
+	  "fund": 15000,
+	  "color": [
+		0.4,
+		0.2,
+		0.1
+	  ],
+	  "id": "nasi_rendang_daging_sapi"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 25000,
+	  "fund": 15000,
+	  "color": [
+		0.85,
+		0.6,
+		0.2
+	  ],
+	  "id": "nasi_gulai_kikil"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"GRILL",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 25000,
+	  "fund": 15000,
+	  "color": [
+		0.4,
+		0.6,
+		0.2
+	  ],
+	  "id": "nasi_dendeng_batokok_cabai_hijau"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 26000,
+	  "fund": 15500,
+	  "color": [
+		0.4,
+		0.55,
+		0.2
+	  ],
+	  "id": "nasi_dendeng_lambok"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 25000,
+	  "fund": 15500,
+	  "color": [
+		0.8,
+		0.55,
+		0.25
+	  ],
+	  "id": "nasi_gulai_tambusu_usus_isi_telur"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 26000,
+	  "fund": 16000,
+	  "color": [
+		0.7,
+		0.5,
+		0.3
+	  ],
+	  "id": "nasi_gajebo"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 26000,
+	  "fund": 16000,
+	  "color": [
+		0.6,
+		0.5,
+		0.3
+	  ],
+	  "id": "nasi_gulai_cumi_isi_tahu_telur"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 27000,
+	  "fund": 17000,
+	  "color": [
+		0.9,
+		0.6,
+		0.2
+	  ],
+	  "id": "nasi_gulai_tunjang_kikil_sapi"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 35000,
+	  "fund": 22000,
+	  "color": [
+		0.55,
+		0.4,
+		0.25
+	  ],
+	  "id": "nasi_gulai_kepala_ikan_kakap"
+	}
+  ],
+  "mie_ayam_bakso": [
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 13000,
+	  "fund": 8000,
+	  "color": [
+		0.8,
+		0.3,
+		0.2
+	  ],
+	  "id": "bakso_polos"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 16000,
+	  "fund": 11000,
+	  "color": [
+		0.9,
+		0.6,
+		0.2
+	  ],
+	  "id": "mie_ayam"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 15000,
+	  "fund": 8000,
+	  "color": [
+		0.3,
+		0.7,
+		0.6
+	  ],
+	  "id": "mie_kuah_bakso"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 16000,
+	  "fund": 10000,
+	  "color": [
+		0.85,
+		0.7,
+		0.15
+	  ],
+	  "id": "yamien_bakso"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 14000,
+	  "fund": 9000,
+	  "color": [
+		0.85,
+		0.4,
+		0.6
+	  ],
+	  "id": "pangsit_goreng_isi"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 15000,
+	  "fund": 9000,
+	  "color": [
+		0.8,
+		0.3,
+		0.2
+	  ],
+	  "id": "bakso_goreng"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"MIXING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 15000,
+	  "fund": 8000,
+	  "color": [
+		0.9,
+		0.55,
+		0.2
+	  ],
+	  "id": "mie_ayam_ceker"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 16000,
+	  "fund": 10000,
+	  "color": [
+		0.3,
+		0.7,
+		0.6
+	  ],
+	  "id": "mie_kuah_ceker"
+	},
+	{
+	  "ingredients": [
+		"MIXING",
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 16000,
+	  "fund": 11000,
+	  "color": [
+		0.2,
+		0.55,
+		0.75
+	  ],
+	  "id": "yahun_ceker"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 19000,
+	  "fund": 12000,
+	  "color": [
+		0.85,
+		0.65,
+		0.1
+	  ],
+	  "id": "yamien_ceker"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 17000,
+	  "fund": 12000,
+	  "color": [
+		0.85,
+		0.35,
+		0.15
+	  ],
+	  "id": "bakso_urat"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"MIXING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 18000,
+	  "fund": 11000,
+	  "color": [
+		0.9,
+		0.55,
+		0.2
+	  ],
+	  "id": "mie_ayam_pangsit"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 15000,
+	  "fund": 8000,
+	  "color": [
+		0.3,
+		0.7,
+		0.6
+	  ],
+	  "id": "mie_kuah_pangsit"
+	},
+	{
+	  "ingredients": [
+		"MIXING",
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 17000,
+	  "fund": 12000,
+	  "color": [
+		0.2,
+		0.55,
+		0.75
+	  ],
+	  "id": "yahun_pangsit"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 18000,
+	  "fund": 12000,
+	  "color": [
+		0.85,
+		0.65,
+		0.1
+	  ],
+	  "id": "yamien_pangsit"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 19000,
+	  "fund": 12000,
+	  "color": [
+		0.85,
+		0.35,
+		0.15
+	  ],
+	  "id": "bakso_mercon"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 16000,
+	  "fund": 11000,
+	  "color": [
+		0.9,
+		0.6,
+		0.2
+	  ],
+	  "id": "mie_ayam_jamur"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"MIXING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 18000,
+	  "fund": 11000,
+	  "color": [
+		0.9,
+		0.55,
+		0.2
+	  ],
+	  "id": "mie_ayam_ekstra_sayur"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 19000,
+	  "fund": 12000,
+	  "color": [
+		0.2,
+		0.6,
+		0.8
+	  ],
+	  "id": "yahun_bakso"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 17000,
+	  "fund": 12000,
+	  "color": [
+		0.85,
+		0.65,
+		0.1
+	  ],
+	  "id": "yamien_komplit"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 19000,
+	  "fund": 12000,
+	  "color": [
+		0.85,
+		0.35,
+		0.15
+	  ],
+	  "id": "bakso_keju"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"MIXING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 18000,
+	  "fund": 12000,
+	  "color": [
+		0.9,
+		0.55,
+		0.2
+	  ],
+	  "id": "mie_ayam_pedas_manis"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 19000,
+	  "fund": 12000,
+	  "color": [
+		0.3,
+		0.7,
+		0.6
+	  ],
+	  "id": "mie_kuah_telur"
+	},
+	{
+	  "ingredients": [
+		"MIXING",
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 18000,
+	  "fund": 11000,
+	  "color": [
+		0.2,
+		0.55,
+		0.75
+	  ],
+	  "id": "yahun_komplit"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 17000,
+	  "fund": 11000,
+	  "color": [
+		0.85,
+		0.7,
+		0.15
+	  ],
+	  "id": "yamien_asin_bakso"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 16000,
+	  "fund": 9000,
+	  "color": [
+		0.85,
+		0.45,
+		0.25
+	  ],
+	  "id": "mie_ayam_bakso"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 14000,
+	  "fund": 9000,
+	  "color": [
+		0.25,
+		0.65,
+		0.5
+	  ],
+	  "id": "mie_kuah_bakso_urat"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 17000,
+	  "fund": 11000,
+	  "color": [
+		0.85,
+		0.45,
+		0.25
+	  ],
+	  "id": "mie_ayam_bakso_urat"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 18000,
+	  "fund": 12000,
+	  "color": [
+		0.2,
+		0.6,
+		0.8
+	  ],
+	  "id": "yahun_spesial"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"COOKING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 14000,
+	  "fund": 8000,
+	  "color": [
+		0.85,
+		0.7,
+		0.15
+	  ],
+	  "id": "yamien_manis_bakso"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 17000,
+	  "fund": 10000,
+	  "color": [
+		0.8,
+		0.35,
+		0.3
+	  ],
+	  "id": "bakso_pangsit"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 17000,
+	  "fund": 12000,
+	  "color": [
+		0.25,
+		0.65,
+		0.5
+	  ],
+	  "id": "mie_kuah_komplit"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 19000,
+	  "fund": 12000,
+	  "color": [
+		0.9,
+		0.3,
+		0.15
+	  ],
+	  "id": "mie_bakso_spesial_pedas"
+	},
+	{
+	  "ingredients": [
+		"MIXING",
+		"COOKING",
+		"SPICE_UP"
+	  ],
+	  "prep_time": 3.0,
+	  "price": 19000,
+	  "fund": 12000,
+	  "color": [
+		0.15,
+		0.5,
+		0.7
+	  ],
+	  "id": "yahun_bakso_urat"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 15000,
+	  "fund": 10000,
+	  "color": [
+		0.85,
+		0.4,
+		0.6
+	  ],
+	  "id": "pangsit_kuah_isi"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 14000,
+	  "fund": 8000,
+	  "color": [
+		0.8,
+		0.35,
+		0.3
+	  ],
+	  "id": "bakso_pangsit_ceker"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"SPICE_UP",
+		"MIXING"
+	  ],
+	  "prep_time": 3.5,
+	  "price": 16000,
+	  "fund": 9000,
+	  "color": [
+		0.85,
+		0.45,
+		0.25
+	  ],
+	  "id": "mie_ayam_komplit"
+	},
+	{
+	  "ingredients": [
+		"COOKING",
+		"MIXING"
+	  ],
+	  "prep_time": 2.0,
+	  "price": 14000,
+	  "fund": 8000,
+	  "color": [
+		0.9,
+		0.6,
+		0.2
+	  ],
+	  "id": "mie_ayam_spesial"
+	}
+  ],
+  "angkringan": [
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 6500,
+	  "fund": 4500,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_pedas_jantung_pisang"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 6500,
+	  "fund": 4500,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_jamur_pedas"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 7000,
+	  "fund": 5000,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_sambal_samin"
+	},
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 7500,
+	  "fund": 5500,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_teri_medan_kemangi"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 7500,
+	  "fund": 5500,
+	  "color": [
+		0.4,
+		0.6,
+		0.25
+	  ],
+	  "id": "sego_sambel_kulit_ayam"
+	},
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8000,
+	  "fund": 6000,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_ayam_jamur"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8000,
+	  "fund": 6000,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_sambal_teri"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8000,
+	  "fund": 6000,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_tongkol_suwir"
+	},
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8500,
+	  "fund": 6500,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_kepala_ayam_kemangi"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8500,
+	  "fund": 6500,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_ayam_suwir_kemang"
+	},
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 9000,
+	  "fund": 7000,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_rendang_suwir"
+	},
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 9000,
+	  "fund": 7000,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_tuna_asap"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 9000,
+	  "fund": 7000,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_cumi_asin_cabai_hijau"
+	},
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 10000,
+	  "fund": 8000,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_jamur_tiram_pedas"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 10000,
+	  "fund": 8000,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_dendeng_suwir"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 10000,
+	  "fund": 8000,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_pindang_rawit"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 10000,
+	  "fund": 8000,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_sambal_goreng_ati_ampela"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 10000,
+	  "fund": 8000,
+	  "color": [
+		0.4,
+		0.6,
+		0.25
+	  ],
+	  "id": "sego_kikil_bumbu_rujak"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 7000,
+	  "fund": 4500,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_oseng_tempe_kacang"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 7000,
+	  "fund": 4500,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_tahu_bacem"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 7000,
+	  "fund": 4500,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_tahu_gejrot"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 7000,
+	  "fund": 4500,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_telur_dadar_suwir"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 7500,
+	  "fund": 5000,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_kerang_ijo_pedas"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 7500,
+	  "fund": 5000,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_sate_usus_pedas"
+	},
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8000,
+	  "fund": 5500,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_ati_ampela_petai"
+	},
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8000,
+	  "fund": 5500,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_udang_rebon_pedas"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8000,
+	  "fund": 5500,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_balado_telur_puyuh"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8000,
+	  "fund": 5500,
+	  "color": [
+		0.4,
+		0.6,
+		0.25
+	  ],
+	  "id": "sego_gudangan_telur_bacem"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8000,
+	  "fund": 5500,
+	  "color": [
+		0.4,
+		0.6,
+		0.25
+	  ],
+	  "id": "sego_sambel_belut"
+	},
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8500,
+	  "fund": 6000,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_bandeng_presto"
+	},
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 8500,
+	  "fund": 6000,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_tongkol_pedas"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 10000,
+	  "fund": 7500,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_sambal_udang"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 10000,
+	  "fund": 7500,
+	  "color": [
+		0.4,
+		0.6,
+		0.25
+	  ],
+	  "id": "sego_sambel_cumi_petai"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 10000,
+	  "fund": 7500,
+	  "color": [
+		0.4,
+		0.6,
+		0.25
+	  ],
+	  "id": "sego_sambel_paru_goreng"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 10000,
+	  "fund": 7000,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_sambal_tongkol_suwir"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"GRILL"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 10000,
+	  "fund": 7000,
+	  "color": [
+		0.4,
+		0.6,
+		0.25
+	  ],
+	  "id": "sego_kikil_sapi_pedas"
+	},
+	{
+	  "ingredients": [
+		"GRILL",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 11000,
+	  "fund": 8000,
+	  "color": [
+		0.75,
+		0.45,
+		0.1
+	  ],
+	  "id": "nasi_bakar_cumi_hitam"
+	},
+	{
+	  "ingredients": [
+		"SPICE_UP",
+		"PACKING"
+	  ],
+	  "prep_time": 2.5,
+	  "price": 10000,
+	  "fund": 6500,
+	  "color": [
+		0.55,
+		0.5,
+		0.2
+	  ],
+	  "id": "nasi_kucing_oseng_mercon"
+	}
+  ]
+}

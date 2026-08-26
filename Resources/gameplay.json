@@ -1,0 +1,18 @@
+{
+	"max_fps": 60,
+	"initial_spawn_delay": 3.0,
+	"customer_walk_time": 1.5,
+	"customer_cleanup_time": 1.5,
+	"serve_time": 0.4,
+	"patience": 30.0,
+	"base_patience": 40.0,
+	"patience_reduction": 1.5,
+	"min_patience": 20.0,
+	"patience_bar": {
+		"green_threshold": 0.5,
+		"green_color": [0.2, 0.9, 0.2],
+		"yellow_threshold": 0.25,
+		"yellow_color": [0.9, 0.8, 0.2],
+		"red_color": [0.9, 0.2, 0.2]
+	}
+}

@@ -1,0 +1,34 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Automated pipeline to fetch certificates, build the Xcode project, and publish to TestFlight"
+  lane :deploy_testflight do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_KEY"],
+      is_key_content_base64: true
+    )
+
+    match(
+      type: "appstore",
+      readonly: true,
+      git_url: ENV["MATCH_GIT_URL"],
+      api_key: api_key
+    )
+
+    gym(
+      project: "build/ios/KedaiMania.xcodeproj",
+      scheme: "KedaiMania",
+      output_directory: "build/ios",
+      output_name: "KedaiMania.ipa",
+      export_method: "app-store"
+    )
+
+    pilot(
+      ipa: "build/ios/KedaiMania.ipa",
+      api_key: api_key,
+      skip_waiting_for_build_processing: true
+    )
+  end
+end

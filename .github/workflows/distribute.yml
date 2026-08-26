@@ -1,0 +1,63 @@
+name: Distribute to TestFlight
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  export-and-build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Cache Godot Editor & Templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Application Support/Godot/
+            /usr/local/bin/godot
+          key: ${{ runner.os }}-godot-v4.6
+
+      - name: Setup Godot Engine
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          curl -LO https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_macos.universal.zip
+          unzip Godot_v4.6-stable_macos.universal.zip
+          mv Godot.app /Applications/
+          ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
+
+      - name: Export Xcode Project
+        run: |
+          mkdir -p build/ios
+          godot --headless --export-release "iOS" build/ios/KedaiMania.xcodeproj
+
+      - name: Run Fastlane Pipeline
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+        run: |
+          bundle exec fastlane deploy_testflight
+
+      - name: Upload IPA Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: KedaiMania-ipa
+          path: build/ios/*.ipa
+          retention-days: 30

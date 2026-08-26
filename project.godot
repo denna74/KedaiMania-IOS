@@ -1,0 +1,44 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="KedaiMania"
+config/description="A fun cooking time management game"
+run/main_scene="res://Scenes/BootSplash.tscn"
+config/quit_on_go_back=false
+config/features=PackedStringArray("4.6")
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/show_image=false
+boot_splash/image="res://Assets/dgs_boot_screen.png"
+config/icon="res://icon.png"
+boot_splash/show_engine_logo=false
+
+[autoload]
+
+Global="*res://Scripts/Global.gd"
+Lang="*res://Scripts/LanguageManager.gd"
+Music="*res://Scripts/MusicManager.gd"
+Sfx="*res://Scripts/SfxManager.gd"
+Ads="*res://Scripts/AdsManager.gd"
+IAPConfig="*res://Scripts/IAPConfig.gd"
+IAP="*res://Scripts/IAPManager.gd"
+
+[display]
+
+window/size/viewport_width=480
+window/size/viewport_height=854
+window/stretch/mode="canvas_items"
+window/handheld/orientation=6
+
+[rendering]
+
+renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true

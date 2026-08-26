@@ -1,0 +1,55 @@
+{
+	"CUTTING": {
+		"name_key": "cutting",
+		"color": [0.6, 0.4, 0.2],
+		"sprite_prefix": "process_chop",
+		"texture": "res://Art/ProcessSprites/process_chop_1.png",
+		"frame_count": 5,
+		"frame_centers": [79.5, 79.5, 79.5, 79.5, 79.0]
+	},
+	"COOKING": {
+		"name_key": "cooking",
+		"color": [0.9, 0.2, 0.1],
+		"sprite_prefix": "process_cook",
+		"texture": "res://Art/ProcessSprites/process_cook_1.png",
+		"frame_count": 5,
+		"frame_centers": [79.5, 79.5, 79.5, 79.5, 79.0]
+	},
+	"MIXING": {
+		"name_key": "mixing",
+		"color": [0.3, 0.5, 0.8],
+		"sprite_prefix": "process_mix",
+		"texture": "res://Art/ProcessSprites/process_mix_1.png",
+		"frame_count": 5,
+		"frame_centers": [79.5, 79.5, 79.5, 79.5, 79.0]
+	},
+	"SERVING": {
+		"name_key": "serving",
+		"color": [0.2, 0.8, 0.5],
+		"texture": "res://Art/ProcessSprites/process_serve.png"
+	},
+	"PACKING": {
+		"name_key": "packing",
+		"color": [0.8, 0.6, 0.1],
+		"sprite_prefix": "process_pack",
+		"texture": "res://Art/ProcessSprites/process_pack_1.png",
+		"frame_count": 5,
+		"frame_centers": [79.5, 79.5, 79.5, 79.5, 79.0]
+	},
+	"GRILL": {
+		"name_key": "grilling",
+		"color": [0.9, 0.3, 0.05],
+		"sprite_prefix": "process_grill",
+		"texture": "res://Art/ProcessSprites/process_grill_1.png",
+		"frame_count": 5,
+		"frame_centers": [79.5, 79.5, 79.5, 79.5, 79.0]
+	},
+	"SPICE_UP": {
+		"name_key": "spicing_up",
+		"color": [0.85, 0.4, 0.1],
+		"sprite_prefix": "process_spice_up",
+		"texture": "res://Art/ProcessSprites/process_spice_up_1.png",
+		"frame_count": 5,
+		"frame_centers": [79.5, 79.5, 79.5, 79.5, 79.0]
+	}
+}

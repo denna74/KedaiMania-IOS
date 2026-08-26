@@ -1,0 +1,9 @@
+{
+	"base_duration": 90.0,
+	"duration_per_level": 10.0,
+	"base_customers": 3,
+	"customers_per_level": 1,
+	"base_spawn_interval": 12.0,
+	"spawn_interval_reduction": 0.3,
+	"min_spawn_interval": 5.0
+}
