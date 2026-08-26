@@ -54,11 +54,6 @@ platform :ios do
       is_key_content_base64: true
     )
 
-    cert(
-      api_key: api_key,
-      output_path: "build/certs"
-    )
-
     sigh(
       api_key: api_key,
       app_identifier: "com.kedaimania",
