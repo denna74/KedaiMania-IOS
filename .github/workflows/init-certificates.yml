@@ -2,12 +2,6 @@ name: Initialize Certificates
 
 on:
   workflow_dispatch:
-    inputs:
-      readonly:
-        description: 'Set to false to create certificates'
-        required: false
-        default: 'false'
-        type: boolean
 
 jobs:
   setup:
@@ -24,9 +18,12 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane
 
-      - name: Run Fastlane Match
-        run: fastlane match appstore --readonly ${{ inputs.readonly }} --force_for_new_certificates
+      - name: Run Fastlane Init Certificates
+        run: fastlane ios init_certificates
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_URL: "https://${{ secrets.MATCH_GITHUB_USERNAME }}:${{ secrets.MATCH_GIT_TOKEN }}@github.com/${{ secrets.MATCH_GITHUB_USERNAME }}/${{ secrets.MATCH_GITHUB_REPO }}.git"
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
