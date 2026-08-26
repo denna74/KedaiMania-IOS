@@ -28,8 +28,8 @@ jobs:
       - name: Set Password on Certificate
         run: |
           P12_FILE=$(ls build/certs/*.p12)
-          openssl pkcs12 -in "$P12_FILE" -out /tmp/cert.pem -nodes -passin pass:
-          openssl pkcs12 -export -in /tmp/cert.pem -inkey /tmp/cert.pem -out "$P12_FILE" -passout pass:KedaiMania2026!
+          openssl pkcs12 -in "$P12_FILE" -out /tmp/cert.pem -nodes -passin pass: -legacy
+          openssl pkcs12 -export -in /tmp/cert.pem -inkey /tmp/cert.pem -out "$P12_FILE" -passout pass:KedaiMania2026! -legacy
           rm /tmp/cert.pem
 
       - name: Upload Certificate Files
