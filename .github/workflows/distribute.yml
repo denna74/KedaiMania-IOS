@@ -19,7 +19,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-          bundler-cache: true
+
+      - name: Install Fastlane
+        run: gem install fastlane
 
       - name: Cache Godot Editor & Templates
         id: cache-godot
@@ -57,7 +59,7 @@ jobs:
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
         run: |
-          bundle exec fastlane deploy_testflight
+          fastlane deploy_testflight
 
       - name: Upload IPA Artifact
         if: always()

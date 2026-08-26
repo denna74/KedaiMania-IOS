@@ -25,7 +25,7 @@ jobs:
         run: gem install fastlane
 
       - name: Run Fastlane Match
-        run: bundle exec fastlane match appstore --readonly ${{ inputs.readonly }}
+        run: fastlane match appstore --readonly ${{ inputs.readonly }}
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
