@@ -58,8 +58,12 @@ platform :ios do
       api_key: api_key,
       app_identifier: "com.kedaimania",
       output_path: "build/profiles",
-      force: true
+      force: true,
+      app_name: "KedaiMania"
     )
+
+    profile_path = Dir["build/profiles/*.mobileprovision"].first
+    profile_name = sh("security cms -D -i #{profile_path} | plutil -extract Name raw -").strip
 
     gym(
       project: "build/ios/KedaiMania.xcodeproj",
@@ -67,7 +71,7 @@ platform :ios do
       output_directory: "build/ios",
       output_name: "KedaiMania.ipa",
       export_method: "app-store",
-      xcargs: "CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY='Apple Distribution' DEVELOPMENT_TEAM=2284W9HK58"
+      xcargs: "CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY='Apple Distribution' DEVELOPMENT_TEAM=2284W9HK58 PROVISIONING_PROFILE_SPECIFIER='#{profile_name}'"
     )
 
     pilot(
