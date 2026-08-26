@@ -51,15 +51,12 @@ jobs:
           godot --headless --export-release "iOS" build/ios/KedaiMania.xcodeproj
 
       - name: Run Fastlane Pipeline
+        run: fastlane ios deploy_testflight
         env:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_URL: "https://${{ secrets.MATCH_GITHUB_USERNAME }}:${{ secrets.MATCH_GIT_TOKEN }}@github.com/${{ secrets.MATCH_GITHUB_USERNAME }}/${{ secrets.MATCH_GITHUB_REPO }}.git"
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-        run: |
-          fastlane deploy_testflight
 
       - name: Upload IPA Artifact
         if: always()
