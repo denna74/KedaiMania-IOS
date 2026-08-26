@@ -66,7 +66,8 @@ platform :ios do
       scheme: "KedaiMania",
       output_directory: "build/ios",
       output_name: "KedaiMania.ipa",
-      export_method: "app-store"
+      export_method: "app-store",
+      xcargs: "CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY='Apple Distribution' DEVELOPMENT_TEAM=2284W9HK58"
     )
 
     pilot(
