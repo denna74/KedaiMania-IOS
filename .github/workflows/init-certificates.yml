@@ -25,6 +25,13 @@ jobs:
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
 
+      - name: Set Password on Certificate
+        run: |
+          P12_FILE=$(ls build/certs/*.p12)
+          openssl pkcs12 -in "$P12_FILE" -out /tmp/cert.pem -nodes -passin pass:
+          openssl pkcs12 -export -in /tmp/cert.pem -inkey /tmp/cert.pem -out "$P12_FILE" -passout pass:KedaiMania2026!
+          rm /tmp/cert.pem
+
       - name: Upload Certificate Files
         if: always()
         uses: actions/upload-artifact@v4
