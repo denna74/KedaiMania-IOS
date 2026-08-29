@@ -12,9 +12,6 @@ build/
 ios/plugins/unity-ads/bin/
 ios/plugins/unity-ads/vendor/
 
-# iOS build artifacts
-ios/
-
 # Opencode superpowers
 .superpowers/
 docs/superpowers/
