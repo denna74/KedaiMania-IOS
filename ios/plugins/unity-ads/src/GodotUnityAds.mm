@@ -2,11 +2,15 @@
 #import <UIKit/UIKit.h>
 #import <UnityAds/UnityAds.h>
 #import <UnityAds/UnityAds-Swift.h>
+#include "core/config/engine.h"
 
 GodotUnityAdsBridge *GodotUnityAdsBridge::instance = NULL;
 
 @implementation GodotUnityAds
 - (void)initializationComplete { dispatch_async(dispatch_get_main_queue(), ^{ GodotUnityAdsBridge::get_singleton()->emit_initialized(); }); }
+- (void)initializationFailed:(UnityAdsInitializationError)error withMessage:(NSString *)message {
+	[self unityAdsInitializationFailed:error withMessage:message];
+}
 - (void)unityAdsInitializationFailed:(UnityAdsInitializationError)error withMessage:(NSString *)message {
 	NSString *err = [NSString stringWithFormat:@"%ld", (long)error];
 	dispatch_async(dispatch_get_main_queue(), ^{ GodotUnityAdsBridge::get_singleton()->emit_init_failed([err UTF8String], [message UTF8String]); });
@@ -17,6 +21,7 @@ GodotUnityAdsBridge *GodotUnityAdsBridge::instance = NULL;
 	dispatch_async(dispatch_get_main_queue(), ^{ GodotUnityAdsBridge::get_singleton()->emit_ad_load_failed([placementId UTF8String], [err UTF8String], [message UTF8String]); });
 }
 - (void)unityAdsShowStart:(NSString *)placementId {}
+- (void)unityAdsShowClick:(NSString *)placementId {}
 - (void)unityAdsShowComplete:(NSString *)placementId withFinishState:(UnityAdsShowCompletionState)state {
 	NSString *stateString = state == kUnityShowCompletionStateCompleted ? @"COMPLETED" : (state == kUnityShowCompletionStateSkipped ? @"SKIPPED" : @"ERROR");
 	dispatch_async(dispatch_get_main_queue(), ^{
