@@ -6,18 +6,19 @@
 
 - This project targets iOS using Godot 4.6 with the Mobile renderer.
 - IAP uses OpenIAP (StoreKit 2) - the `IAP` autoload.
-- Ads use the poing-godot-admob iOS plugin - the `MobileAds` singleton.
-- The `UnityAds` autoload has been removed (was Android-only).
+- Ads use Unity Ads - the `Ads` autoload drives the `UnityAds` autoload, which
+  wraps the native `GodotUnityAds` iOS plugin singleton.
 - Product IDs use reverse-domain notation (e.g., `com.kedaimania.warung_pecel_lele`).
 
-## AdMob Plugin Notes
+## Unity Ads Plugin Notes
 
-**ALWAYS pass `null` (or nothing) to `RewardedAdLoader.load()`** — the test ad unit ID
-for iOS is `ca-app-pub-3940256099942544/1712485313`. Replace with your own ad unit ID
-before production release.
+The native bridge and `UnityAds.xcframework` are built by
+`ios/plugins/unity-ads/build.sh` on the macOS GitHub Actions runner.
+Configure the iOS Game ID and rewarded placement under Project Settings ->
+`unity_ads/`.
 
 ## Build & Deploy
 
 - GitHub Actions CI/CD pipeline runs on `macos-latest` runners (free for public repos).
-- Fastlane handles code-signing (match) and TestFlight upload.
+- Fastlane handles code-signing (cert/sigh) and TestFlight upload.
 - See `README.md` for full setup instructions.

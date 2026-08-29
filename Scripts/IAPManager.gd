@@ -14,6 +14,7 @@ var _initialized: bool = false
 var _products_ready: bool = false
 var _extend_purchase_pending: bool = false
 var _pending_restorations: Array[Dictionary] = []
+var _purchases_by_token: Dictionary = {}
 
 func _ready():
 	if ClassDB.class_exists("GodotIap") or Engine.has_singleton("GodotIap"):
@@ -105,6 +106,7 @@ func _check_pending_restorations():
 				print("Purchase already delivered, cleaning up: ", product_id, " token=", token)
 				_acknowledge_purchase(purchase, product_id)
 			else:
+				_purchases_by_token[token] = purchase
 				print("Pending delivery for: ", product_id, " token=", token)
 				_pending_restorations.append({"sku": product_id, "token": token})
 		if not _pending_restorations.is_empty():
@@ -157,6 +159,7 @@ func _on_purchase_updated(purchase: Dictionary):
 	if product_id.is_empty() or token.is_empty():
 		return
 	print("Purchase updated: ", product_id, " token=", token)
+	_purchases_by_token[token] = purchase
 	if product_id == IAPConfig.EXTEND_KITCHEN_SKU:
 		_extend_purchase_pending = false
 		kitchen_extended.emit(token)

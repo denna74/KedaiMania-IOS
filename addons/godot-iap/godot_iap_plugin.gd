@@ -9,7 +9,7 @@ func _enter_tree() -> void:
 	# Add autoload singleton for easy access
 	add_autoload_singleton(AUTOLOAD_NAME, "res://addons/godot-iap/godot_iap.gd")
 
-	# Add export plugin for Android
+	# Add export plugin for iOS
 	_export_plugin = GodotIapExportPlugin.new()
 	add_export_plugin(_export_plugin)
 
@@ -29,7 +29,6 @@ func _exit_tree() -> void:
 
 class GodotIapExportPlugin extends EditorExportPlugin:
 	const PLUGIN_NAME = "GodotIap"
-	const ANDROID_GDAP_PATH = "res://addons/godot-iap/android/GodotIap.gdap"
 	const IOS_FRAMEWORKS: Array[String] = [
 		"res://addons/godot-iap/bin/ios/GodotIap.framework",
 		"res://addons/godot-iap/bin/ios/SwiftGodotRuntime.framework",
@@ -39,8 +38,6 @@ class GodotIapExportPlugin extends EditorExportPlugin:
 		return PLUGIN_NAME
 
 	func _supports_platform(platform: EditorExportPlatform) -> bool:
-		if platform is EditorExportPlatformAndroid:
-			return true
 		if platform is EditorExportPlatformIOS:
 			return true
 		return false
@@ -73,33 +70,3 @@ class GodotIapExportPlugin extends EditorExportPlugin:
 
 		# Godot 4.3/4.4 still expose the iOS-specific export API.
 		add_ios_embedded_framework(path)
-
-	func _get_android_libraries(platform: EditorExportPlatform, debug: bool) -> PackedStringArray:
-		# Path is relative to the project root (res://)
-		if debug:
-			return PackedStringArray(["res://addons/godot-iap/android/GodotIap.debug.aar"])
-		else:
-			return PackedStringArray(["res://addons/godot-iap/android/GodotIap.release.aar"])
-
-	func _get_android_dependencies(platform: EditorExportPlatform, debug: bool) -> PackedStringArray:
-		return _read_android_remote_dependencies()
-
-	func _read_android_remote_dependencies() -> PackedStringArray:
-		if not FileAccess.file_exists(ANDROID_GDAP_PATH):
-			push_warning("[GodotIap] Missing Android dependency manifest: %s" % ANDROID_GDAP_PATH)
-			return PackedStringArray()
-
-		var gdap_content := FileAccess.get_file_as_string(ANDROID_GDAP_PATH)
-		var dependency_regex := RegEx.new()
-		var compile_error := dependency_regex.compile("\"([A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+:[^\"]+)\"")
-		if compile_error != OK:
-			push_warning("[GodotIap] Failed to compile Android dependency parser")
-			return PackedStringArray()
-
-		var dependencies := PackedStringArray()
-		for match_result in dependency_regex.search_all(gdap_content):
-			dependencies.append(match_result.get_string(1))
-
-		if dependencies.is_empty():
-			push_warning("[GodotIap] No remote Android dependencies found in %s" % ANDROID_GDAP_PATH)
-		return dependencies

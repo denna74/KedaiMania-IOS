@@ -8,6 +8,10 @@
 # Build output
 build/
 
+# Unity Ads iOS plugin built artifacts
+ios/plugins/unity-ads/bin/
+ios/plugins/unity-ads/vendor/
+
 # iOS build artifacts
 ios/
 

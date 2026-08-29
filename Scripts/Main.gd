@@ -1584,7 +1584,7 @@ func _show_buy_popup(kedai_id: String):
 		buy_popup.add_child(buy_btn)
 
 		var iap_price_lbl = Label.new()
-		iap_price_lbl.text = Lang.t("google_play_price") % str(prices.google_play_price)
+		iap_price_lbl.text = Lang.t("iap_price") % str(prices.apple_price)
 		iap_price_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		iap_price_lbl.add_theme_font_override("font", fredoka)
 		iap_price_lbl.add_theme_font_size_override("font_size", 12)

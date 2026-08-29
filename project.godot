@@ -27,6 +27,7 @@ Global="*res://Scripts/Global.gd"
 Lang="*res://Scripts/LanguageManager.gd"
 Music="*res://Scripts/MusicManager.gd"
 Sfx="*res://Scripts/SfxManager.gd"
+UnityAds="*res://autoload/UnityAds.gd"
 Ads="*res://Scripts/AdsManager.gd"
 IAPConfig="*res://Scripts/IAPConfig.gd"
 IAP="*res://Scripts/IAPManager.gd"
@@ -42,3 +43,14 @@ window/handheld/orientation=6
 
 renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot-iap/plugin.cfg")
+
+[unity_ads]
+
+auto_initialize=true
+test_mode=true
+ios/game_id="0000000"
+ios/placements/rewarded="Rewarded_iOS"

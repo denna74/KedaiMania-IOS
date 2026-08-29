@@ -96,9 +96,9 @@
  "buy_iap": "Buy",
  "insufficient_funds": "Insufficient funds!",
  "game_money_price": "Rp %s",
- "google_play_price": "$%s USD",
+ "iap_price": "$%s USD",
  "iap_not_ready": "Connecting...",
- "iap_unavailable": "Google Play not available",
+ "iap_unavailable": "Payment unavailable",
  "desc_bihun_goreng_ayam": "A popular Indonesian stir-fried rice vermicelli dish featuring tender chicken pieces. Thin rice noodles are tossed in a savory mix of sweet soy sauce, garlic, shallots, and vegetables. It is a staple comfort food, often served with pickles and crackers, offering a perfect balance of sweet and savory flavors that is beloved by all ages across the archipelago.",
  "desc_bihun_goreng_seafood": "This savory dish elevates classic stir-fried rice vermicelli by incorporating fresh seafood such as shrimp and squid. The noodles soak up the aromatic stir-fry sauce, complemented by the natural sweetness of the seafood and crunchy vegetables. It is a savory, satisfying meal that brings a delightful oceanic flavor to the traditional Indonesian street food experience.",
  "desc_capcay_goreng_ayam": "A stir-fried vegetable medley dish inspired by Chinese-Indonesian cuisine, featuring juicy chicken slices. It uses a variety of fresh vegetables like cauliflower, carrots, and bok choy, stir-fried quickly in a thick, savory oyster-based sauce. It is a healthy yet delicious option, perfect when paired with warm white rice for a complete and balanced daily meal.",
@@ -456,7 +456,7 @@
  "nasi_kucing_oseng_mercon": "Nasi Kucing Oseng Mercon",
  "desc_nasi_kucing_oseng_mercon": "Spicy sautéed beef trimmings with bird's eye chilies that explode with heat. The savory beef broth balances the dominant spice. A must-try for those who enjoy the challenge of intense heat.",
   "customer_counter": "Customer",
-  "extend_kitchen_unavailable": "Google Play unavailable",
+  "extend_kitchen_unavailable": "Payment unavailable",
  "extend_kitchen_not_ready": "Billing not ready",
  "extend_kitchen_error": "Purchase failed"
 }

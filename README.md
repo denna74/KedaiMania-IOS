@@ -14,7 +14,7 @@ iOS port of KedaiMania cooking time management game, built with Godot 4.6.
 1. Enroll in the Apple Developer Program
 2. Create an App ID with bundle identifier `com.kedaimania`
 3. Create an App Store Connect API key for Fastlane
-4. Create a private git repository for Fastlane match certificates
+4. Store the certificate `.p12` as the `BUILD_CERTIFICATE_P12` GitHub secret
 
 ### 2. GitHub Repository Setup
 
@@ -27,9 +27,7 @@ iOS port of KedaiMania cooking time management game, built with Godot 4.6.
 | `APP_STORE_CONNECT_API_KEY_ID` | Your App Store Connect API key ID |
 | `APP_STORE_CONNECT_API_ISSUER_ID` | Your App Store Connect API issuer ID |
 | `APP_STORE_CONNECT_API_KEY_KEY` | Your App Store Connect API private key (base64) |
-| `MATCH_PASSWORD` | Encryption password for Fastlane match |
-| `MATCH_GIT_URL` | Git URL of your private certificates repository |
-| `FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD` | Apple app-specific password |
+| `BUILD_CERTIFICATE_P12` | Base64-encoded Apple Distribution `.p12` |
 
 ### 3. Initial Certificate Setup (One-Time)
 
@@ -39,11 +37,11 @@ On a Mac (or borrow one briefly), run:
 # Install Fastlane
 gem install fastlane
 
-# Generate certificates (run once with read_only: false)
-fastlane match appstore --readonly false
+# Generate certificates through the GitHub Actions Initialize Certificates workflow
+fastlane ios init_certificates
 ```
 
-This creates your signing certificates and provisioning profiles stored in the match repository.
+This creates the signing certificate and provisioning profile used by the workflow.
 
 ### 4. Build & Deploy
 
@@ -80,7 +78,7 @@ KedaiManiaIos/
 ├── addons/                 # Godot plugins
 │   └── godot-iap/          # OpenIAP (StoreKit 2)
 ├── ios/plugins/            # iOS native plugins
-│   └── poing-godot-admob/  # AdMob iOS SDK
+│   └── unity-ads/          # Unity Ads iOS bridge and manifest
 ├── fastlane/               # Fastlane config
 ├── .github/workflows/      # GitHub Actions CI/CD
 └── project.godot           # Godot project file
@@ -91,25 +89,20 @@ KedaiManiaIos/
 | Feature | Android | iOS |
 |---------|---------|-----|
 | IAP | Google Play Billing | OpenIAP (StoreKit 2) |
-| Ads | Unity Ads | AdMob iOS |
+| Ads | Unity Ads | Unity Ads iOS bridge |
 | Build | Gradle | GitHub Actions + Fastlane |
 
-## Ad Unit IDs (Test)
+## Unity Ads Configuration
 
-- **iOS Rewarded**: `ca-app-pub-3940256099942544/1712485313`
-- **Android Rewarded**: `ca-app-pub-3940256099942544/5224354917`
-
-Replace with your own ad unit IDs before production release.
+Set the real iOS Game ID in Project Settings -> `unity_ads/ios/game_id`.
+The default rewarded placement is `Rewarded_iOS`; replace it with the
+placement configured in the Unity Dashboard before production release.
 
 ## Troubleshooting
 
 ### Build fails with "No matching provisioning profiles"
 
-Run `fastlane match` again to regenerate certificates:
-
-```bash
-fastlane match appstore --readonly false
-```
+Run the `Initialize Certificates` workflow again to regenerate certificates.
 
 ### Godot export fails
 

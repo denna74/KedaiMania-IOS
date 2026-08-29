@@ -1,9 +1,10 @@
 extends Node
 class_name GodotIapWrapper
 
-## GodotIap - iOS/macOS in-app purchase plugin for Godot
+## GodotIap - Cross-platform in-app purchase plugin for Godot
 ##
 ## Provides unified API for:
+## - Google Play Billing (Android)
 ## - App Store / StoreKit 2 (iOS and macOS)
 ##
 ## @see https://openiap.dev/docs/apis
@@ -48,6 +49,8 @@ signal products_fetched(result: Dictionary)
 signal connected()
 signal disconnected()
 signal promoted_product_ios(product_id: String)
+signal user_choice_billing_android(details: Dictionary)
+signal developer_provided_billing_android(details: Dictionary)
 
 ## Subscription billing-issue event (cross-platform).
 ##
@@ -107,6 +110,17 @@ func _init_native_plugin() -> void:
 				_connect_signals_apple()
 				return
 
+	# Android: Try GodotIap singleton
+	if _platform == "Android":
+		print("[GodotIap] Checking for Android singleton...")
+		if Engine.has_singleton("GodotIap"):
+			_native_plugin = Engine.get_singleton("GodotIap")
+			print("[GodotIap] Native plugin loaded via Engine singleton (Android)")
+			print("[GodotIap] Plugin class: ", _native_plugin.get_class())
+			_connect_signals_android()
+			return
+		else:
+			print("[GodotIap] ERROR: GodotIap singleton not found!")
 
 	# No native plugin available - desktop/editor mode
 	print("[GodotIap] Native plugin not available - running in no native plugin")
@@ -133,6 +147,45 @@ func _connect_signals_apple() -> void:
 	if _native_plugin.has_signal("subscription_billing_issue"):
 		_native_plugin.connect("subscription_billing_issue", _on_native_subscription_billing_issue_apple)
 
+func _connect_signals_android() -> void:
+	if not _native_plugin:
+		return
+
+	print("[GodotIap] Connecting Android signals...")
+
+	if _native_plugin.has_signal("purchase_updated"):
+		_native_plugin.connect("purchase_updated", _on_android_purchase_updated)
+		print("[GodotIap] Connected: purchase_updated")
+
+	if _native_plugin.has_signal("purchase_error"):
+		_native_plugin.connect("purchase_error", _on_android_purchase_error)
+		print("[GodotIap] Connected: purchase_error")
+
+	if _native_plugin.has_signal("products_fetched"):
+		_native_plugin.connect("products_fetched", _on_android_products_fetched)
+		print("[GodotIap] Connected: products_fetched")
+
+	if _native_plugin.has_signal("connected"):
+		_native_plugin.connect("connected", _on_connected)
+		print("[GodotIap] Connected: connected")
+
+	if _native_plugin.has_signal("disconnected"):
+		_native_plugin.connect("disconnected", _on_disconnected)
+		print("[GodotIap] Connected: disconnected")
+
+	if _native_plugin.has_signal("user_choice_billing"):
+		_native_plugin.connect("user_choice_billing", _on_android_user_choice_billing)
+		print("[GodotIap] Connected: user_choice_billing")
+
+	if _native_plugin.has_signal("developer_provided_billing"):
+		_native_plugin.connect("developer_provided_billing", _on_android_developer_provided_billing)
+		print("[GodotIap] Connected: developer_provided_billing")
+
+	if _native_plugin.has_signal("subscription_billing_issue"):
+		_native_plugin.connect("subscription_billing_issue", _on_android_subscription_billing_issue)
+		print("[GodotIap] Connected: subscription_billing_issue")
+
+	print("[GodotIap] Android signal connection complete")
 
 # ==========================================
 # Signal Handlers - Apple (SwiftGodot)
@@ -185,6 +238,38 @@ func _on_native_promoted_product_ios(product_id: String) -> void:
 func _on_native_subscription_billing_issue_apple(purchase: Dictionary) -> void:
 	subscription_billing_issue.emit(_canonical_purchase(purchase))
 
+# ==========================================
+# Signal Handlers - Android (JSON strings)
+# ==========================================
+func _on_android_purchase_updated(purchase_json: String) -> void:
+	var purchase = JSON.parse_string(purchase_json)
+	if purchase is Dictionary:
+		purchase_updated.emit(purchase)
+
+func _on_android_purchase_error(error_json: String) -> void:
+	var error = JSON.parse_string(error_json)
+	if error is Dictionary:
+		purchase_error.emit(error)
+
+func _on_android_products_fetched(result_json: String) -> void:
+	var result = JSON.parse_string(result_json)
+	if result is Dictionary:
+		products_fetched.emit(result)
+
+func _on_android_user_choice_billing(details_json: String) -> void:
+	var details = JSON.parse_string(details_json)
+	if details is Dictionary:
+		user_choice_billing_android.emit(details)
+
+func _on_android_developer_provided_billing(details_json: String) -> void:
+	var details = JSON.parse_string(details_json)
+	if details is Dictionary:
+		developer_provided_billing_android.emit(details)
+
+func _on_android_subscription_billing_issue(purchase_json: String) -> void:
+	var purchase = JSON.parse_string(purchase_json)
+	if purchase is Dictionary:
+		subscription_billing_issue.emit(purchase)
 
 # ==========================================
 # Connection (OpenIAP Mutation)
@@ -193,6 +278,9 @@ func _on_native_subscription_billing_issue_apple(purchase: Dictionary) -> void:
 ## Initialize the store connection. Must be called before any other IAP API.
 ##
 ## [param config]: optional [InitConnectionConfig]. On Android, set
+## [code]enable_billing_program_android[/code] to Billing Choice and use
+## [code]billing_choice_screen_type_android[/code] to match Play Console.
+##
 ## Returns [code]true[/code] once the platform billing client is connected.
 ##
 ## [codeblock]
@@ -203,7 +291,18 @@ func _on_native_subscription_billing_issue_apple(purchase: Dictionary) -> void:
 func init_connection(config = null) -> bool:
 	print("[GodotIap] init_connection called")
 	if _native_plugin:
-		if _is_apple():
+		if _platform == "Android":
+			print("[GodotIap] Calling Android initConnection...")
+			if config != null:
+				var config_dict = config.to_dict() if typeof(config) == TYPE_OBJECT and config.has_method("to_dict") else config
+				_is_connected = _native_plugin.call("initConnectionWithConfig", JSON.stringify(config_dict))
+			else:
+				_is_connected = _native_plugin.call("initConnection")
+			if not _is_connected:
+				print("[GodotIap] ERROR: initConnection failed. Check Google Play Services and billing setup.")
+			else:
+				print("[GodotIap] initConnection result: ", _is_connected)
+		elif _is_apple():
 			print("[GodotIap] Calling Apple initConnection...")
 			_apply_purchase_updated_listener_options_apple()
 			var payload = await _call_apple_async("initConnection")
@@ -340,6 +439,10 @@ func _product_from_dict(product_dict: Dictionary) -> Variant:
 	elif raw_type is int:
 		is_subscription = raw_type == Types.ProductType.SUBS
 
+	if _platform == "Android":
+		if is_subscription:
+			return Types.ProductSubscriptionAndroid.from_dict(product_dict)
+		return Types.ProductAndroid.from_dict(product_dict)
 	if _is_apple():
 		if is_subscription:
 			return Types.ProductSubscriptionIOS.from_dict(product_dict)
@@ -359,7 +462,14 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 			return { "products": [], "error": "Invalid product query type" }
 		normalized_request["type"] = query_type
 		var request_json = JSON.stringify(normalized_request)
-		if _is_apple():
+		if _platform == "Android":
+			print("[GodotIap] Calling fetchProducts with: ", request_json)
+			var result_json = _native_plugin.call("fetchProducts", request_json)
+			var result = JSON.parse_string(result_json)
+			if result is Dictionary:
+				return result
+			return { "products": [], "error": "Parse error" }
+		elif _is_apple():
 			print("[GodotIap] Calling fetchProducts with: ", request_json)
 			var signal_result = await _call_apple_async("fetchProducts", [request_json])
 			var products_array: Array = []
@@ -385,7 +495,7 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 ## [param props]: [RequestPurchaseProps]. For one-time products, set
 ## [code]props.request.apple.sku[/code] and/or [code]props.request.google.skus[/code].
 ## For subscriptions, use [code]props.request_subscription[/code] with
-## [code]RequestSubscriptionPropsByPlatforms[/code];
+## [code]RequestSubscriptionPropsByPlatforms[/code]; Android subscriptions normally also need
 ## [code]subscription_offers[/code].
 ##
 ## Returns the dispatched purchase payload — [b]do not rely on it[/b] for the outcome.
@@ -408,7 +518,9 @@ func request_purchase(props) -> Variant:
 	if result.get("status", "") == "pending" or result.get("pending", false):
 		return null
 	if result.get("success", false):
-		if _is_apple():
+		if _platform == "Android":
+			return Types.PurchaseAndroid.from_dict(_normalize_android_purchase_dict(result))
+		elif _is_apple():
 			return Types.PurchaseIOS.from_dict(_normalize_purchase_dict(result))
 		# A success envelope on an unrecognized platform cannot be mapped to a
 		# typed purchase. Report it instead of returning a bare null, which is
@@ -510,7 +622,101 @@ func _request_purchase_raw(args: Dictionary) -> Dictionary:
 		return _purchase_failure("developer-error", "requestSubscription requires type `subs`")
 
 	var result_raw = null
-	if _is_apple():
+	if _platform == "Android":
+		# Android requestPurchase is async — returns a pending response, then
+		# delivers the final state via purchase_updated / purchase_error.
+		var google_props = request.get("google", {})
+		if not google_props is Dictionary:
+			return _purchase_failure(
+				"developer-error",
+				"Invalid request: google payload must be a Dictionary"
+			)
+		if not google_props.has("skus") or not _is_nonempty_string_array(google_props["skus"]):
+			return _purchase_failure(
+				"developer-error",
+				"Invalid request: skus must contain only non-empty strings"
+			)
+		var offer_token = google_props.get("offerToken", "")
+		if offer_token == null:
+			offer_token = ""
+		elif not offer_token is String:
+			return _purchase_failure(
+				"developer-error",
+				"Invalid request: offerToken must be a string"
+			)
+		if google_props.has("offerToken") and google_props["offerToken"] != null and purchase_type != "in-app":
+			return _purchase_failure(
+				"developer-error",
+				"Invalid request: offerToken requires type `in-app`"
+			)
+		var has_subscription_offers = (
+			google_props.has("subscriptionOffers") and google_props["subscriptionOffers"] != null
+		)
+		var subscription_offers = google_props.get("subscriptionOffers", [])
+		if subscription_offers == null:
+			subscription_offers = []
+		if not _is_valid_subscription_offer_array(subscription_offers, google_props["skus"]):
+			return _purchase_failure(
+				"developer-error",
+				"Invalid request: subscriptionOffers must contain sku and offerToken strings"
+			)
+		if has_subscription_offers and purchase_type != "subs":
+			return _purchase_failure(
+				"developer-error",
+				"Invalid request: subscriptionOffers requires type `subs`"
+			)
+		var has_replacement_params = (
+			google_props.has("subscriptionProductReplacementParams")
+			and google_props["subscriptionProductReplacementParams"] != null
+		)
+		var replacement_params = google_props.get("subscriptionProductReplacementParams", null)
+		if has_replacement_params and purchase_type != "subs":
+			return _purchase_failure(
+				"developer-error",
+				"Invalid request: subscriptionProductReplacementParams requires type `subs`"
+			)
+		if typeof(replacement_params) == TYPE_OBJECT and replacement_params.has_method("to_dict"):
+			replacement_params = replacement_params.to_dict()
+		var has_developer_billing_option = (
+			google_props.has("developerBillingOption") and google_props["developerBillingOption"] != null
+		)
+		var developer_billing_option = google_props.get("developerBillingOption", null)
+		if typeof(developer_billing_option) == TYPE_OBJECT and developer_billing_option.has_method("to_dict"):
+			developer_billing_option = developer_billing_option.to_dict()
+		for field in ["purchaseToken", "originalExternalTransactionId"]:
+			var value = google_props.get(field, null)
+			if value != null and not value is String:
+				return _purchase_failure(
+					"developer-error",
+					"Invalid request: %s must be a string" % field
+				)
+			if google_props.has(field) and value != null and purchase_type != "subs":
+				return _purchase_failure(
+					"developer-error",
+					"Invalid request: %s requires type `subs`" % field
+				)
+		var params = {
+			"type": purchase_type,
+			"skus": google_props.get("skus", []),
+			"obfuscatedAccountId": google_props.get("obfuscatedAccountId", ""),
+			"obfuscatedProfileId": google_props.get("obfuscatedProfileId", ""),
+			"isOfferPersonalized": google_props.get("isOfferPersonalized", false),
+		}
+		if has_subscription_offers:
+			params["subscriptionOffers"] = subscription_offers
+		if has_replacement_params:
+			params["subscriptionProductReplacementParams"] = replacement_params
+		if has_developer_billing_option:
+			params["developerBillingOption"] = developer_billing_option
+		for field in ["purchaseToken", "originalExternalTransactionId"]:
+			if google_props.has(field) and google_props[field] != null:
+				params[field] = google_props[field]
+		if purchase_type == "in-app" and not offer_token.is_empty():
+			params["offerToken"] = offer_token
+		var params_json = JSON.stringify(params)
+		print("[GodotIap] Calling Android requestPurchase: type=", purchase_type, ", skus=", params["skus"].size(), ", subscriptionOffers=", subscription_offers.size(), ", hasPurchaseToken=", params.has("purchaseToken"))
+		result_raw = _native_plugin.call("requestPurchase", params_json)
+	elif _is_apple():
 		var apple_props = request.get("apple", {})
 		if not apple_props is Dictionary:
 			return _purchase_failure(
@@ -564,7 +770,7 @@ func _request_purchase_raw(args: Dictionary) -> Dictionary:
 ## await iap.finish_transaction(purchase, false)
 ## [/codeblock]
 ##
-## [b]Critical:[/b] Purchases must be finalized promptly.
+## [b]Critical:[/b] Android purchases must be finalized within 3 days or Google auto-refunds.
 ## Unfinished StoreKit transactions replay on every app launch.
 ##
 ## See: https://openiap.dev/docs/apis/finish-transaction
@@ -590,7 +796,25 @@ func _finish_transaction_raw(purchase: Dictionary, is_consumable: bool) -> Dicti
 	if not _native_plugin:
 		return { "success": true }
 
-	if _is_apple():
+	if _platform == "Android":
+		# Use the Kotlin finishTransaction method which handles both consume and acknowledge
+		# It internally calls store.finishTransaction(purchase, isConsumable) from OpenIAP
+		var product_id = purchase.get("productId", "")
+		if product_id.is_empty():
+			return { "success": false, "error": "Product ID is required", "code": Types.ErrorCode.DEVELOPER_ERROR }
+
+		var purchase_json = JSON.stringify(purchase)
+		print("[GodotIap] Calling Android finishTransaction for productId=", product_id, ", isConsumable: ", is_consumable)
+
+		# Note: has_method() doesn't work reliably with JNISingleton, so we call directly
+		var result_json = _native_plugin.call("finishTransaction", purchase_json, is_consumable)
+		print("[GodotIap] finishTransaction result received")
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return result
+		return { "success": false, "error": "Parse error" }
+
+	elif _is_apple():
 		var args = { "purchase": purchase, "isConsumable": is_consumable }
 		var args_json = JSON.stringify(args)
 		print("[GodotIap] Calling finishTransaction for productId=", purchase.get("productId", ""), ", isConsumable: ", is_consumable)
@@ -600,6 +824,7 @@ func _finish_transaction_raw(purchase: Dictionary, is_consumable: bool) -> Dicti
 
 ## Restore completed transactions.
 ## Apple platforms: Performs a lightweight sync then fetches available purchases.
+## Android: Simply fetches available purchases.
 ## @return Types.VoidResult
 ##
 ## See: https://openiap.dev/docs/apis/restore-purchases
@@ -680,7 +905,9 @@ func get_available_purchases_result(options = null) -> Dictionary:
 	var purchases: Array = []
 
 	for purchase_dict in raw_purchases:
-		if _is_apple():
+		if _platform == "Android":
+			purchases.append(Types.PurchaseAndroid.from_dict(_normalize_android_purchase_dict(purchase_dict)))
+		elif _is_apple():
 			purchases.append(Types.PurchaseIOS.from_dict(_normalize_purchase_dict(purchase_dict)))
 
 	return {
@@ -700,6 +927,11 @@ func _normalize_purchase_dict(purchase_dict: Dictionary) -> Dictionary:
 	return normalized
 
 
+func _normalize_android_purchase_dict(purchase_dict: Dictionary) -> Dictionary:
+	var normalized := _normalize_purchase_dict(purchase_dict)
+	if not normalized.has("isAcknowledgedAndroid") and normalized.has("isAcknowledged"):
+		normalized["isAcknowledgedAndroid"] = normalized["isAcknowledged"]
+	return normalized
 
 
 func _as_dictionary(value) -> Dictionary:
@@ -728,6 +960,29 @@ func _get_available_purchases_result_raw(options = null) -> Dictionary:
 		}
 
 	var options_dict := _as_dictionary(options)
+	if _platform == "Android":
+		var result_json
+		if options == null:
+			result_json = _native_plugin.call("getAvailablePurchasesResult")
+		else:
+			result_json = _native_plugin.call(
+				"getAvailablePurchasesResultWithOptions",
+				JSON.stringify(options_dict)
+			)
+		var result = JSON.parse_string(result_json)
+		if not result is Dictionary:
+			return {
+				"success": false,
+				"code": "billing-response-json-parse-error",
+				"error": "Failed to parse the Android available-purchases response",
+			}
+		if not result.get("success", false):
+			return {
+				"success": false,
+				"code": String(result.get("code", "service-error")),
+				"error": String(result.get("error", "Failed to get available purchases")),
+			}
+		return _validated_purchase_batch(result.get("purchases", null), "Android")
 
 	if _is_apple():
 		var payload = await _call_apple_async(
@@ -780,6 +1035,8 @@ func _is_valid_purchase_dictionary(value) -> bool:
 	var store := String(value.get("store"))
 	if _is_apple() and store != "apple":
 		return false
+	if _platform == "Android" and store not in ["google", "amazon", "horizon"]:
+		return false
 	var transaction_date = value.get("transactionDate")
 	if not transaction_date is float and not transaction_date is int:
 		return false
@@ -801,7 +1058,9 @@ func _is_valid_purchase_dictionary(value) -> bool:
 			if not id is String:
 				return false
 	for optional_object in [
+		"pendingPurchaseUpdateAndroid",
 		"offerIOS",
+		"renewalInfoIOS",
 		"commitmentInfoIOS",
 		"advancedCommerceInfoIOS",
 	]:
@@ -865,6 +1124,21 @@ func _get_active_subscriptions_result_raw(subscription_ids: Array = []) -> Dicti
 			"error": "Native plugin not available",
 		}
 	var ids_json = JSON.stringify(subscription_ids) if subscription_ids.size() > 0 else ("" if _is_apple() else null)
+	if _platform == "Android":
+		var result = JSON.parse_string(
+			_native_plugin.call("getActiveSubscriptionsResult", ids_json)
+		)
+		if not result is Dictionary:
+			return _active_subscription_failure(
+				"billing-response-json-parse-error",
+				"Failed to parse the Android active-subscriptions response"
+			)
+		if not result.get("success", false):
+			return _active_subscription_failure(
+				String(result.get("code", "service-error")),
+				String(result.get("error", "Failed to get active subscriptions"))
+			)
+		return _validated_active_subscription_batch(result.get("subscriptions", null), "Android")
 	if _is_apple():
 		var payload = await _call_apple_async("getActiveSubscriptions", [ids_json])
 		if not payload.get("success", false):
@@ -939,12 +1213,14 @@ func has_active_subscriptions_result(
 	subscription_ids: Array[String] = []
 ) -> Dictionary:
 	print("[GodotIap] has_active_subscriptions_result called")
-	if _native_plugin and _is_apple():
-		var ids_json = JSON.stringify(subscription_ids) if subscription_ids.size() > 0 else ""
+	if _native_plugin and (_platform == "Android" or _is_apple()):
+		var ids_json = JSON.stringify(subscription_ids) if subscription_ids.size() > 0 else ("" if _is_apple() else null)
 		var result = null
 		if _is_apple():
 			result = await _call_apple_async("hasActiveSubscriptions", [ids_json])
 		else:
+			result = JSON.parse_string(_native_plugin.call("hasActiveSubscriptions", ids_json))
+		if not result is Dictionary:
 			return _active_subscription_failure(
 				"billing-response-json-parse-error",
 				"Failed to parse the active-subscription status response"
@@ -964,7 +1240,7 @@ func has_active_subscriptions_result(
 			"hasActive": result.get("hasActive"),
 		}
 	return _active_subscription_failure(
-		"not-prepared" if _is_apple() else "feature-not-supported",
+		"not-prepared" if _platform == "Android" or _is_apple() else "feature-not-supported",
 		"Active-subscription status requires a native store plugin"
 	)
 
@@ -973,19 +1249,18 @@ func has_active_subscriptions_result(
 # ==========================================
 
 ## Get the current storefront country code.
-## @return String - country code (e.g., "USA" on Apple)
+## @return String - country code (e.g., "US" on Android, "USA" on Apple)
 ##
 ## See: https://openiap.dev/docs/apis/get-storefront
 func get_storefront() -> String:
 	print("[GodotIap] get_storefront called")
 	if not _native_plugin:
-		var unavailable_code = "not-prepared" if _is_apple() else "feature-not-supported"
+		var unavailable_code = "not-prepared" if _platform == "Android" or _is_apple() else "feature-not-supported"
 		purchase_error.emit({
 			"code": unavailable_code,
 			"message": "Storefront lookup requires a native store plugin",
 		})
 		return ""
-	return ""
 	if _is_apple():
 		var payload = await _call_apple_async("getStorefront")
 		if payload.get("success", false):
@@ -995,6 +1270,35 @@ func get_storefront() -> String:
 			"message": String(payload.get("error", "Storefront lookup failed")),
 		})
 		return ""
+	if _platform != "Android":
+		purchase_error.emit({
+			"code": "feature-not-supported",
+			"message": "Storefront lookup is not supported on %s" % _platform,
+		})
+		return ""
+
+	var result_json = _native_plugin.call("getStorefrontAndroid")
+	var result = JSON.parse_string(result_json)
+	if result is Dictionary and result.get("success", false):
+		var country_code = String(result.get("countryCode", "")).strip_edges()
+		if not country_code.is_empty():
+			return country_code
+
+	var error_code = "service-error"
+	var error_message = "Storefront lookup returned no country code"
+	if result is Dictionary:
+		error_code = String(result.get("code", error_code))
+		if not result.get("success", false):
+			error_message = String(result.get("error", "Storefront lookup failed"))
+	elif result_json == null or String(result_json).is_empty():
+		error_message = "Storefront native method returned no response"
+	else:
+		error_message = "Storefront native method returned an invalid response"
+	purchase_error.emit({
+		"code": error_code,
+		"message": error_message,
+	})
+	return ""
 
 # ==========================================
 # Verification (OpenIAP Mutation)
@@ -1002,7 +1306,7 @@ func get_storefront() -> String:
 
 ## Verify a purchase locally.
 ## @param props: Types.VerifyPurchaseProps - verification properties
-## @return Types.VerifyPurchaseResultIOS or null on failure
+## @return Types.VerifyPurchaseResultIOS or Types.VerifyPurchaseResultAndroid, or null on failure
 ##
 ## See: https://openiap.dev/docs/features/validation#verify-purchase
 func verify_purchase(props) -> Variant:
@@ -1016,7 +1320,22 @@ func verify_purchase(props) -> Variant:
 			if decoded is Dictionary:
 				return Types.VerifyPurchaseResultIOS.from_dict(decoded)
 		return null
+
+	var result = _verify_purchase_raw(props_dict)
+	if result.get("success", false) or result.get("isValid", false):
+		if _platform == "Android":
+			return Types.VerifyPurchaseResultAndroid.from_dict(result)
 	return null
+## Internal: Verify purchase with raw Dictionary
+func _verify_purchase_raw(props: Dictionary) -> Dictionary:
+	if _native_plugin and _platform == "Android":
+		var props_json = JSON.stringify(props)
+		var result_json = _native_plugin.call("verifyPurchase", props_json)
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return result
+	# No native plugin
+	return { "isValid": false, "error": "Not available in no native plugin" }
 
 ## Verify a purchase using external provider (IAPKit).
 ## @param props: Types.VerifyPurchaseWithProviderProps - provider verification properties
@@ -1048,6 +1367,12 @@ func verify_purchase_with_provider(props) -> Variant:
 
 ## Internal: Verify purchase with provider raw Dictionary
 func _verify_purchase_with_provider_raw(props: Dictionary) -> Dictionary:
+	if _native_plugin and _platform == "Android":
+		var props_json = JSON.stringify(props)
+		var result_json = _native_plugin.call("verifyPurchaseWithProvider", props_json)
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return result
 	# No native plugin
 	return {
 		"provider": props.get("provider", "iapkit"),
@@ -1576,6 +1901,181 @@ func show_external_purchase_custom_link_notice_ios(notice_type: String) -> Varia
 			return Types.ExternalPurchaseCustomLinkNoticeResultIOS.from_dict(decoded)
 	return null
 
+# ==========================================
+# Android-Specific (OpenIAP)
+# ==========================================
+
+## Acknowledge a purchase (Android only, for non-consumables).
+## @param purchase_token: String - the purchase token to acknowledge
+## @return bool - true if the purchase was acknowledged successfully
+##
+## See: https://openiap.dev/docs/apis/android/acknowledge-purchase-android
+func acknowledge_purchase_android(purchase_token: String) -> bool:
+	var result = _acknowledge_purchase_android_raw(purchase_token)
+	return result.get("success", false)
+
+## Internal: Acknowledge purchase raw
+func _acknowledge_purchase_android_raw(purchase_token: String) -> Dictionary:
+	print("[GodotIap] _acknowledge_purchase_android_raw tokenPresent=", not purchase_token.is_empty())
+	if _native_plugin and _platform == "Android":
+		print("[GodotIap] Calling acknowledgePurchaseAndroid...")
+		var result_json = _native_plugin.call("acknowledgePurchaseAndroid", purchase_token)
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return result
+	return { "success": false, "error": "Not available" }
+
+## Consume a purchase (Android only, for consumables).
+## @param purchase_token: String - the purchase token to consume
+## @return bool - true if the purchase was consumed successfully
+##
+## See: https://openiap.dev/docs/apis/android/consume-purchase-android
+func consume_purchase_android(purchase_token: String) -> bool:
+	var result = _consume_purchase_android_raw(purchase_token)
+	return result.get("success", false)
+
+## Internal: Consume purchase raw
+func _consume_purchase_android_raw(purchase_token: String) -> Dictionary:
+	print("[GodotIap] _consume_purchase_android_raw tokenPresent=", not purchase_token.is_empty())
+	if _native_plugin and _platform == "Android":
+		print("[GodotIap] Calling consumePurchaseAndroid...")
+		var result_json = _native_plugin.call("consumePurchaseAndroid", purchase_token)
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return result
+	return { "success": false, "error": "Not available" }
+
+## Check if a billing program is available (Android 8.2.0+).
+## @param billing_program: Types.BillingProgramAndroid - billing program enum value
+## @return Types.BillingProgramAvailabilityResultAndroid
+##
+## See: https://openiap.dev/docs/apis/android/is-billing-program-available-android
+func is_billing_program_available_android(billing_program) -> Variant:
+	if _native_plugin and _platform == "Android":
+		var result_json = _native_plugin.call("isBillingProgramAvailableAndroid", _billing_program_to_raw(billing_program))
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return Types.BillingProgramAvailabilityResultAndroid.from_dict(result)
+	var default_result = Types.BillingProgramAvailabilityResultAndroid.new()
+	default_result.is_available = false
+	default_result.billing_program = billing_program
+	return default_result
+
+func _billing_program_to_raw(billing_program) -> Variant:
+	if typeof(billing_program) == TYPE_INT and Types.BILLING_PROGRAM_ANDROID_VALUES.has(billing_program):
+		return Types.BILLING_PROGRAM_ANDROID_VALUES[billing_program]
+	return billing_program
+
+func _developer_billing_type_to_raw(developer_billing_type) -> Variant:
+	if typeof(developer_billing_type) == TYPE_INT and Types.DEVELOPER_BILLING_TYPE_ANDROID_VALUES.has(developer_billing_type):
+		return Types.DEVELOPER_BILLING_TYPE_ANDROID_VALUES[developer_billing_type]
+	return developer_billing_type
+
+## Fetch Play Billing assets and loyalty text for developer-rendered Billing Choice screens (Android 9.1.0+).
+## @param params: Types.GetBillingChoiceInfoParamsAndroid - Billing Choice info parameters
+## @return Types.BillingChoiceInfoAndroid
+##
+## See: https://openiap.dev/docs/apis/android/get-billing-choice-info-android
+func get_billing_choice_info_android(params) -> Variant:
+	if _native_plugin and _platform == "Android":
+		var params_json = JSON.stringify(params.to_dict())
+		var result_json = _native_plugin.call("getBillingChoiceInfoAndroid", params_json)
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return Types.BillingChoiceInfoAndroid.from_dict(result)
+	return Types.BillingChoiceInfoAndroid.new()
+
+## Launch external link (Android 8.2.0+).
+## @param params: Types.LaunchExternalLinkParamsAndroid - external link parameters
+## @return bool - true if the external link flow was accepted/launched
+##
+## See: https://openiap.dev/docs/apis/android/launch-external-link-android
+func launch_external_link_android(params) -> bool:
+	if _native_plugin and _platform == "Android":
+		var params_json = JSON.stringify(params.to_dict())
+		var result_json = _native_plugin.call("launchExternalLinkAndroid", params_json)
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return bool(result.get("launched", result.get("success", false)))
+	return false
+
+## Open the Google Play offer/promo code redemption flow (Android).
+## Opens the Play Store redeem page. A listener can receive the redeemed purchase
+## while the app has an active billing connection; reconcile on app resume.
+## Does not require the billing client to be initialized.
+## @return bool - true if launched, false if unavailable
+##
+## See: https://openiap.dev/docs/apis/android/open-redeem-offer-code-android
+func open_redeem_offer_code_android() -> bool:
+	if _native_plugin and _platform == "Android":
+		var result_json = _native_plugin.call("openRedeemOfferCodeAndroid")
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return bool(result.get("launched", result.get("success", false)))
+	elif _platform == "Android":
+		# No native plugin: open the Play Store redeem page directly
+		return OS.shell_open("https://play.google.com/redeem") == OK
+	return false
+
+## Create billing program reporting details (Android 8.2.0+).
+## @param billing_program: Types.BillingProgramAndroid - billing program enum value
+## @param developer_billing_type: Types.DeveloperBillingTypeAndroid or null
+## @return Types.BillingProgramReportingDetailsAndroid
+##
+## See: https://openiap.dev/docs/apis/android/create-billing-program-reporting-details-android
+func create_billing_program_reporting_details_android(billing_program, developer_billing_type = null) -> Variant:
+	if _native_plugin and _platform == "Android":
+		var result_json: String
+		if developer_billing_type == null:
+			result_json = _native_plugin.call("createBillingProgramReportingDetailsAndroid", _billing_program_to_raw(billing_program))
+		else:
+			result_json = _native_plugin.call("createBillingProgramReportingDetailsAndroidWithType", JSON.stringify({
+				"billingProgram": _billing_program_to_raw(billing_program),
+				"developerBillingType": _developer_billing_type_to_raw(developer_billing_type)
+			}))
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return Types.BillingProgramReportingDetailsAndroid.from_dict(result)
+	var default_result = Types.BillingProgramReportingDetailsAndroid.new()
+	default_result.billing_program = billing_program
+	return default_result
+
+## Show Google's mandatory information dialog before a developer-rendered,
+## in-app Billing Choice screen (Android 9.1.0+).
+## @param params: Types.BillingProgramInformationDialogParamsAndroid
+## @return Types.BillingResultAndroid
+##
+## See: https://openiap.dev/docs/apis/android/show-billing-program-information-dialog-android
+func show_billing_program_information_dialog_android(params) -> Variant:
+	if _native_plugin and _platform == "Android":
+		var result_json = _native_plugin.call("showBillingProgramInformationDialogAndroid", JSON.stringify(params.to_dict()))
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return Types.BillingResultAndroid.from_dict(result)
+	return Types.BillingResultAndroid.new()
+
+## Show Play Billing in-app messages (Android).
+## @param params: Types.InAppMessageParamsAndroid or null
+## @return Types.InAppMessageResultAndroid
+##
+## See: https://openiap.dev/docs/apis/android/show-in-app-messages-android
+func show_in_app_messages_android(params = null) -> Variant:
+	if _native_plugin and _platform == "Android":
+		var params_dict = params.to_dict() if params != null and params is Object and params.has_method("to_dict") else {}
+		var result_json = _native_plugin.call("showInAppMessagesAndroid", JSON.stringify(params_dict))
+		var result = JSON.parse_string(result_json)
+		if result is Dictionary:
+			return Types.InAppMessageResultAndroid.from_dict(result)
+	var default_result = Types.InAppMessageResultAndroid.new()
+	default_result.response_code = Types.InAppMessageResponseCodeAndroid.NO_ACTION_NEEDED
+	return default_result
+
+## Get the package name (Android only).
+## @return String - Android package name
+func get_package_name_android() -> String:
+	if _native_plugin and _platform == "Android":
+		return _native_plugin.call("getPackageNameAndroid")
+	return ""
 
 # ==========================================
 # Deep Link (OpenIAP Mutation)
@@ -1588,17 +2088,35 @@ func show_external_purchase_custom_link_notice_ios(notice_type: String) -> Varia
 ## See: https://openiap.dev/docs/apis/deep-link-to-subscriptions
 func deep_link_to_subscriptions(options = null) -> Variant:
 	var opts = options if options != null else Types.DeepLinkOptions.new()
-	if _native_plugin and _is_apple():
+	if _native_plugin and _platform == "Android":
+		var android_options_json = JSON.stringify(opts.to_dict())
+		var android_result_json = _native_plugin.call("deepLinkToSubscriptions", android_options_json)
+		var android_result = JSON.parse_string(android_result_json)
+		if android_result is Dictionary:
+			return Types.VoidResult.from_dict(android_result)
+	elif _native_plugin and _is_apple():
 		var apple_options_json = JSON.stringify(opts.to_dict())
 		var apple_payload = await _call_apple_async("deepLinkToSubscriptions", [apple_options_json])
 		return Types.VoidResult.from_dict(apple_payload)
-	if _is_apple():
+	elif _is_apple():
 		# Apple: Open App Store subscription management URL
 		var apple_fallback_result = Types.VoidResult.new()
 		apple_fallback_result.success = OS.shell_open(
 			"https://apps.apple.com/account/subscriptions"
 		) == OK
 		return apple_fallback_result
+	elif _platform == "Android":
+		# Android: Open Play Store subscription management URL
+		var subscription_url := "https://play.google.com/store/account/subscriptions"
+		var sku = opts.sku_android if opts.sku_android else ""
+		var package_name = opts.package_name_android if opts.package_name_android else get_package_name_android()
+		if not sku.is_empty() and not package_name.is_empty():
+			var encoded_sku = sku.uri_encode()
+			var encoded_package = package_name.uri_encode()
+			subscription_url += "?sku=%s&package=%s" % [encoded_sku, encoded_package]
+		var android_fallback_result = Types.VoidResult.new()
+		android_fallback_result.success = OS.shell_open(subscription_url) == OK
+		return android_fallback_result
 	var unavailable_result = Types.VoidResult.new()
 	unavailable_result.success = false
 	return unavailable_result
@@ -1608,7 +2126,7 @@ func deep_link_to_subscriptions(options = null) -> Variant:
 # ==========================================
 
 ## Get current platform
-## Returns "iOS", "macOS", etc.
+## Returns "Android", "iOS", "macOS", etc.
 func get_platform() -> String:
 	return _platform
 
@@ -1619,7 +2137,9 @@ func is_stub_mode() -> bool:
 ## Get the current store type
 ## Returns Types.IapStore enum value
 func get_store() -> Variant:
-	if _is_apple():
+	if _platform == "Android":
+		return Types.IapStore.GOOGLE
+	elif _is_apple():
 		return Types.IapStore.APPLE
 	return Types.IapStore.UNKNOWN
 

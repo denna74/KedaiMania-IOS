@@ -96,9 +96,9 @@
  "buy_iap": "Beli",
  "insufficient_funds": "Dana tidak cukup!",
  "game_money_price": "Rp %s",
- "google_play_price": "$%s USD",
+ "iap_price": "$%s USD",
  "iap_not_ready": "Menghubungkan...",
- "iap_unavailable": "Google Play tidak tersedia",
+ "iap_unavailable": "Pembayaran tidak tersedia",
  "desc_bihun_goreng_ayam": "Hidangan bihun goreng populer dengan irisan ayam yang lezat. Bihun ditumis dengan campuran kecap manis, bawang putih, bawang merah, dan sayuran. Menjadi makanan rumahan favorit, hidangan ini sering disajikan dengan acar dan kerupuk. Perpaduan rasa manis dan gurihnya yang khas membuatnya sangat digemari oleh semua kalangan di seluruh penjuru nusantara.",
  "desc_bihun_goreng_seafood": "Hidangan bihun goreng yang ditingkatkan dengan tambahan seafood segar seperti udang dan cumi. Bihun menyerap bumbu tumisan yang aromatik, berpadu dengan manisnya seafood dan renyahnya sayuran. Ini adalah sajian yang gurih dan mengenyangkan, menghadirkan cita rasa laut yang lezat ke dalam pengalaman menikmati jajanan kaki lima khas Indonesia.",
  "desc_capcay_goreng_ayam": "Tumisan aneka sayuran khas peranakan dengan potongan ayam yang empuk. Menggunakan berbagai sayuran segar seperti kembang kol, wortel, dan sawi yang ditumis cepat dalam saus tiram yang gurih dan kental. Pilihan hidangan yang sehat dan lezat, sangat pas disantap bersama nasi putih hangat untuk menu makanan sehari-hari yang lengkap dan bergizi.",
@@ -456,7 +456,7 @@
  "nasi_kucing_oseng_mercon": "Nasi Kucing Oseng Mercon",
  "desc_nasi_kucing_oseng_mercon": "Tetelan sapi tumis pedas dengan cabai rawit yang meledak di lidah. Gurihnya kaldu sapi menyeimbangkan rasa pedas yang dominan. Wajib dicoba bagi Anda yang sangat menyukai tantangan rasa pedas.",
   "customer_counter": "Pelanggan",
-  "extend_kitchen_unavailable": "Google Play tidak tersedia",
+  "extend_kitchen_unavailable": "Pembayaran tidak tersedia",
  "extend_kitchen_not_ready": "Pembayaran belum siap",
  "extend_kitchen_error": "Pembelian gagal"
 }
