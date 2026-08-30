@@ -1,22 +1,24 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bhjl1o6bg1y74"]
 
 [ext_resource type="Texture2D" uid="uid://0mxsk6vcnf6l" path="res://Assets/dgs_boot_screen.png" id="1_splash"]
-[ext_resource type="Script" path="res://Scripts/BootSplash.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://cpcvibe0bblp3" path="res://Scripts/BootSplash.gd" id="2_script"]
 
-[node name="BootSplash" type="Control"]
+[node name="BootSplash" type="Control" unique_id=1672849759]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("2_script")
 
-[node name="Background" type="ColorRect" parent="."]
-anchors_preset = 15
+[node name="Background" type="ColorRect" parent="." unique_id=129271111]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0, 0, 0, 1)
 
-[node name="SplashImage" type="TextureRect" parent="."]
+[node name="SplashImage" type="TextureRect" parent="." unique_id=1421581955]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0

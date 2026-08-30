@@ -31,6 +31,7 @@ UnityAds="*res://autoload/UnityAds.gd"
 Ads="*res://Scripts/AdsManager.gd"
 IAPConfig="*res://Scripts/IAPConfig.gd"
 IAP="*res://Scripts/IAPManager.gd"
+GodotIapPlugin="*uid://bfjo323qxscvt"
 
 [display]
 
@@ -39,14 +40,14 @@ window/size/viewport_height=854
 window/stretch/mode="canvas_items"
 window/handheld/orientation=6
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot-iap/plugin.cfg")
+
 [rendering]
 
 renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/godot-iap/plugin.cfg")
 
 [unity_ads]
 

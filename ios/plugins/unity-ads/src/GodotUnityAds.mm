@@ -9,7 +9,7 @@ GodotUnityAdsBridge *GodotUnityAdsBridge::instance = NULL;
 @implementation GodotUnityAds
 - (void)initializationComplete { dispatch_async(dispatch_get_main_queue(), ^{ GodotUnityAdsBridge::get_singleton()->emit_initialized(); }); }
 - (void)initializationFailed:(UnityAdsInitializationError)error withMessage:(NSString *)message {
-	NSString *err = [NSString stringWithFormat:"%ld", (long)error];
+	NSString *err = [NSString stringWithFormat:@"%ld", (long)error];
 	dispatch_async(dispatch_get_main_queue(), ^{ GodotUnityAdsBridge::get_singleton()->emit_init_failed([err UTF8String], [message UTF8String]); });
 }
 - (void)unityAdsAdLoaded:(NSString *)placementId { dispatch_async(dispatch_get_main_queue(), ^{ GodotUnityAdsBridge::get_singleton()->emit_ad_loaded([placementId UTF8String]); }); }
@@ -41,13 +41,17 @@ void GodotUnityAdsBridge::load_ad(String placement_id) { NSString *placement = [
 void GodotUnityAdsBridge::show_ad(String placement_id) {
 	NSString *placement = [NSString stringWithUTF8String:placement_id.utf8().get_data()];
 	UIViewController *rootController = nil;
-	for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
-		if (scene.activationState == UISceneActivationStateForegroundActive && [scene isKindOfClass:[UIWindowScene class]]) {
-			rootController = ((UIWindowScene *)scene).keyWindow.rootViewController;
-			break;
+	if (@available(iOS 13.0, *)) {
+		for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+			if (scene.activationState == UISceneActivationStateForegroundActive && [scene isKindOfClass:[UIWindowScene class]]) {
+				rootController = ((UIWindowScene *)scene).keyWindow.rootViewController;
+				break;
+			}
 		}
 	}
-	if (rootController == nil && UIApplication.sharedApplication.keyWindow != nil) rootController = UIApplication.sharedApplication.keyWindow.rootViewController;
+	if (rootController == nil && UIApplication.sharedApplication.keyWindow != nil) {
+		rootController = UIApplication.sharedApplication.keyWindow.rootViewController;
+	}
 	[UnityAds show:rootController placementId:placement showDelegate:unityAds];
 }
 void GodotUnityAdsBridge::load_banner(String, String) {}
