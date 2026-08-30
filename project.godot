@@ -52,5 +52,5 @@ enabled=PackedStringArray("res://addons/godot-iap/plugin.cfg")
 
 auto_initialize=true
 test_mode=true
-ios/game_id="0000000"
+ios/game_id="800363193"
 ios/placements/rewarded="Rewarded_iOS"

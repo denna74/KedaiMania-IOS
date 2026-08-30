@@ -456,7 +456,15 @@ func _on_start():
 	_show_kedai_menu()
 
 func _on_quit():
-	get_tree().quit()
+	_request_app_exit()
+
+func _request_app_exit() -> void:
+	var tree := get_tree()
+	if tree == null:
+		return
+	if tree.root != null:
+		tree.root.propagate_notification(SceneTree.NOTIFICATION_WM_CLOSE_REQUEST)
+	tree.quit()
 
 func _on_settings_pressed():
 	if current_state != MenuState.STATE_MAIN:

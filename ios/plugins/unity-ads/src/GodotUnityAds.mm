@@ -9,10 +9,7 @@ GodotUnityAdsBridge *GodotUnityAdsBridge::instance = NULL;
 @implementation GodotUnityAds
 - (void)initializationComplete { dispatch_async(dispatch_get_main_queue(), ^{ GodotUnityAdsBridge::get_singleton()->emit_initialized(); }); }
 - (void)initializationFailed:(UnityAdsInitializationError)error withMessage:(NSString *)message {
-	[self unityAdsInitializationFailed:error withMessage:message];
-}
-- (void)unityAdsInitializationFailed:(UnityAdsInitializationError)error withMessage:(NSString *)message {
-	NSString *err = [NSString stringWithFormat:@"%ld", (long)error];
+	NSString *err = [NSString stringWithFormat:"%ld", (long)error];
 	dispatch_async(dispatch_get_main_queue(), ^{ GodotUnityAdsBridge::get_singleton()->emit_init_failed([err UTF8String], [message UTF8String]); });
 }
 - (void)unityAdsAdLoaded:(NSString *)placementId { dispatch_async(dispatch_get_main_queue(), ^{ GodotUnityAdsBridge::get_singleton()->emit_ad_loaded([placementId UTF8String]); }); }
