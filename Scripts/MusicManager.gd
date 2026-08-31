@@ -57,6 +57,8 @@ func _update_music():
 
 func _play_menu():
 	_stop_all()
+	if _menu_stream:
+		_menu_stream.loop = true
 	if bgm_level > 0 and not menu_player.playing:
 		menu_player.play()
 
@@ -70,6 +72,8 @@ func _play_game():
 	if game_player.stream != stream:
 		game_player.stop()
 		game_player.stream = stream
+	if game_player.stream:
+		game_player.stream.loop = true
 	_stop_all()
 	if bgm_level > 0 and not game_player.playing:
 		game_player.play()

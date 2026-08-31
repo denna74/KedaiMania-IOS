@@ -4,7 +4,7 @@
 
 ## iOS-Specific Notes
 
-- This project targets iOS using Godot 4.6 with the Mobile renderer.
+- This project targets iOS using Godot 4.7 with the Mobile renderer.
 - IAP uses OpenIAP (StoreKit 2) - the `IAP` autoload.
 - Ads use Unity Ads - the `Ads` autoload drives the `UnityAds` autoload, which
   wraps the native `GodotUnityAds` iOS plugin singleton.

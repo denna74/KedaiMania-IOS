@@ -30,14 +30,14 @@ jobs:
           path: |
             ~/godot/
             ~/Library/Application Support/Godot/
-          key: ${{ runner.os }}-godot-v4.6.3
+          key: ${{ runner.os }}-godot-v4.7
 
       - name: Setup Godot Engine
         run: |
           mkdir -p "$HOME/godot/bin"
           if [ ! -x "$HOME/godot/Godot.app/Contents/MacOS/Godot" ]; then
             curl -L --fail -o "$RUNNER_TEMP/Godot.zip" \
-              https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_macos.universal.zip
+              https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_macos.universal.zip
             rm -rf "$RUNNER_TEMP/Godot" "$HOME/godot/Godot.app"
             mkdir -p "$RUNNER_TEMP/Godot"
             unzip -q "$RUNNER_TEMP/Godot.zip" -d "$RUNNER_TEMP/Godot"
@@ -45,13 +45,13 @@ jobs:
           fi
           ln -sf "$HOME/godot/Godot.app/Contents/MacOS/Godot" "$HOME/godot/bin/godot"
           echo "$HOME/godot/bin" >> "$GITHUB_PATH"
-          mkdir -p ~/Library/Application\ Support/Godot/export_templates/4.6.stable
-          if [ -z "$(find ~/Library/Application\ Support/Godot/export_templates/4.6.stable -mindepth 1 -print -quit)" ]; then
+          mkdir -p ~/Library/Application\ Support/Godot/export_templates/4.7.stable
+          if [ -z "$(find ~/Library/Application\ Support/Godot/export_templates/4.7.stable -mindepth 1 -print -quit)" ]; then
             curl -L --fail -o "$RUNNER_TEMP/Godot_templates.tpz" \
-              https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_export_templates.tpz
+              https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz
             rm -rf "$RUNNER_TEMP/templates"
             unzip -q "$RUNNER_TEMP/Godot_templates.tpz" -d "$RUNNER_TEMP/templates"
-            mv "$RUNNER_TEMP/templates/templates/"* ~/Library/Application\ Support/Godot/export_templates/4.6.stable/
+            mv "$RUNNER_TEMP/templates/templates/"* ~/Library/Application\ Support/Godot/export_templates/4.7.stable/
           fi
 
       - name: Import Code Signing Certificate

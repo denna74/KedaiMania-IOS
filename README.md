@@ -1,6 +1,6 @@
 # KedaiMania iOS
 
-iOS port of KedaiMania cooking time management game, built with Godot 4.6.
+iOS port of KedaiMania cooking time management game, built with Godot 4.7.
 
 ## Prerequisites
 
@@ -106,7 +106,7 @@ Run the `Initialize Certificates` workflow again to regenerate certificates.
 
 ### Godot export fails
 
-Ensure you have the latest Godot 4.6 stable release and iOS export templates installed.
+Ensure you have the latest Godot 4.7 stable release and iOS export templates installed.
 
 ### TestFlight build not appearing
 

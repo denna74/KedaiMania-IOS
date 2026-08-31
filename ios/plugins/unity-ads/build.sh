@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-GODOT_TAG="4.6-stable"
+GODOT_TAG="4.7-stable"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 export PATH="$PATH:/opt/homebrew/bin"

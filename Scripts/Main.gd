@@ -6,20 +6,19 @@ const SettingsPopupScript = preload("res://Scripts/SettingsPopup.gd")
 var instr: Label
 var cook_eng: Texture2D
 var cook_id: Texture2D
-var exit_eng: Texture2D	
-var exit_id: Texture2D
 var main_menu_eng: Texture2D
 var main_menu_id: Texture2D
 var build_btn_eng: Texture2D
 var build_btn_id: Texture2D
-var settings_btn: Button
+var settings_btn_eng: Texture2D
+var settings_btn_id: Texture2D
+var settings_btn: TextureButton
 var settings_popup: SettingsPopup
 
 enum MenuState { STATE_MAIN, STATE_KEDAI, STATE_LEVEL_SELECT }
 var current_state = MenuState.STATE_MAIN
 var kedai_buttons: Array[BaseButton] = []
 var start_btn_pos: Vector2
-var quit_btn_pos: Vector2
 var click_player: AudioStreamPlayer
 var page_player: AudioStreamPlayer
 var current_tween: Tween
@@ -197,31 +196,15 @@ func setup_ui():
 	add_child(instr_bg)
 	move_child(instr_bg, 2)
 
-	settings_btn = Button.new()
+	settings_btn_eng = make_texture("res://Art/Buttons/button_settings_eng.png", 210, 127)
+	settings_btn_id = make_texture("res://Art/Buttons/button_settings_id.png", 210, 127)
+	var is_en_btn = Lang.current_language == "en"
+	settings_btn = TextureButton.new()
 	settings_btn.name = "settings_btn"
-	settings_btn.text = Lang.t("settings")
-	var gear_tex = make_texture("res://Art/Buttons/setting_small.png", 24, 24)
-	if gear_tex:
-		var gear_img = gear_tex.get_image()
-		var padded = Image.create(27, 24, false, gear_img.get_format())
-		padded.blit_rect(gear_img, Rect2i(0, 0, 24, 24), Vector2i(3, 0))
-		settings_btn.icon = ImageTexture.create_from_image(padded)
-	else:
-		settings_btn.icon = gear_tex
-	settings_btn.expand_icon = true
-	settings_btn.add_theme_font_override("font", fredoka)
-	settings_btn.add_theme_font_size_override("font_size", 16)
-	settings_btn.add_theme_color_override("font_color", Color.WHITE)
-	var settings_sb = StyleBoxFlat.new()
-	settings_sb.bg_color = Color(0.3, 0.3, 0.35)
-	settings_sb.corner_radius_top_left = 6
-	settings_sb.corner_radius_top_right = 6
-	settings_sb.corner_radius_bottom_left = 6
-	settings_sb.corner_radius_bottom_right = 6
-	settings_btn.add_theme_stylebox_override("normal", settings_sb)
-	settings_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	settings_btn.position = Vector2(-160, 8)
-	settings_btn.size = Vector2(148, 36)
+	settings_btn.texture_normal = settings_btn_eng if is_en_btn else settings_btn_id
+	settings_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	settings_btn.position = Vector2(135, 630)
+	settings_btn.size = Vector2(210, 127)
 	settings_btn.pressed.connect(_on_settings_pressed)
 	settings_btn.button_down.connect(_on_btn_down.bind(settings_btn))
 	settings_btn.button_up.connect(_on_btn_up.bind(settings_btn))
@@ -229,8 +212,6 @@ func setup_ui():
 
 	cook_eng = make_texture("res://Art/Buttons/cook_button_eng.png", 260, 228)
 	cook_id = make_texture("res://Art/Buttons/cook_button_id.png", 260, 228)
-	exit_eng = make_texture("res://Art/Buttons/exit_button_eng.png", 210, 127)
-	exit_id = make_texture("res://Art/Buttons/exit_button_id.png", 210, 127)
 	build_btn_eng = make_texture("res://Art/Buttons/button_build.png", 130, 40)
 	build_btn_id = make_texture("res://Art/Buttons/button_bangun.png", 130, 40)
 
@@ -246,17 +227,6 @@ func setup_ui():
 	start_btn.button_up.connect(_on_btn_up.bind(start_btn))
 	add_child(start_btn)
 	start_btn_pos = start_btn.position
-
-	var quit_btn = TextureButton.new()
-	quit_btn.name = "quit_btn"
-	quit_btn.texture_normal = exit_eng if is_en else exit_id
-	quit_btn.position = Vector2(135, 630)
-	quit_btn.size = Vector2(210, 127)
-	quit_btn.pressed.connect(_on_quit)
-	quit_btn.button_down.connect(_on_btn_down.bind(quit_btn))
-	quit_btn.button_up.connect(_on_btn_up.bind(quit_btn))
-	add_child(quit_btn)
-	quit_btn_pos = quit_btn.position
 
 	var mood_label = Label.new()
 	mood_label.name = "mood_label"
@@ -455,19 +425,6 @@ func _on_start():
 	click_player.play(0.0)
 	_show_kedai_menu()
 
-func _on_quit():
-	_request_app_exit()
-
-func _request_app_exit() -> void:
-	if OS.get_name() == "iOS":
-		return
-	var tree := get_tree()
-	if tree == null:
-		return
-	if tree.root != null:
-		tree.root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
-	tree.quit()
-
 func _on_settings_pressed():
 	if current_state != MenuState.STATE_MAIN:
 		return
@@ -478,9 +435,8 @@ func _on_language_changed():
 	_update_logo()
 	instr.text = Lang.t("instructions")
 	var is_en = Lang.current_language == "en"
-	settings_btn.text = Lang.t("settings")
+	settings_btn.texture_normal = settings_btn_eng if is_en else settings_btn_id
 	get_node("start_btn").texture_normal = cook_eng if is_en else cook_id
-	get_node("quit_btn").texture_normal = exit_eng if is_en else exit_id
 	var back_btn = get_node("back_btn") as TextureButton
 	if back_btn:
 		back_btn.texture_normal = main_menu_eng if is_en else main_menu_id
@@ -515,7 +471,6 @@ func _show_kedai_menu():
 	current_state = MenuState.STATE_KEDAI
 	var logo = get_node("logo")
 	var start_btn = get_node("start_btn")
-	var quit_btn = get_node("quit_btn")
 	var instr = get_node("instructions")
 	var instr_bg = get_node("instr_bg")
 
@@ -527,12 +482,10 @@ func _show_kedai_menu():
 	tween.tween_property(instr_bg, "modulate", Color(1, 1, 1, 0), 0.3)
 	tween.tween_property(start_btn, "position", start_btn.position + Vector2(0, -50), 0.3)
 	tween.tween_property(start_btn, "modulate", Color(1, 1, 1, 0), 0.3)
-	tween.tween_property(quit_btn, "position", quit_btn.position + Vector2(0, -50), 0.3)
-	tween.tween_property(quit_btn, "modulate", Color(1, 1, 1, 0), 0.3)
 	await tween.finished
 
 	start_btn.visible = false
-	quit_btn.visible = false
+	settings_btn.visible = false
 
 	var tween2 = create_tween().set_parallel(true)
 	current_tween = tween2
@@ -677,12 +630,11 @@ func _show_main_menu():
 
 	var logo = get_node("logo")
 	var start_btn = get_node("start_btn")
-	var quit_btn = get_node("quit_btn")
 	var instr = get_node("instructions")
 	var instr_bg = get_node("instr_bg")
 
 	start_btn.visible = true
-	quit_btn.visible = true
+	settings_btn.visible = true
 
 	var tween2 = create_tween().set_parallel(true)
 	current_tween = tween2
@@ -692,8 +644,6 @@ func _show_main_menu():
 	tween2.tween_property(instr_bg, "modulate", Color(1, 1, 1, 1), 0.3)
 	tween2.tween_property(start_btn, "position", start_btn_pos, 0.3)
 	tween2.tween_property(start_btn, "modulate", Color(1, 1, 1, 1), 0.3)
-	tween2.tween_property(quit_btn, "position", quit_btn_pos, 0.3)
-	tween2.tween_property(quit_btn, "modulate", Color(1, 1, 1, 1), 0.3)
 	await tween2.finished
 	_start_btn_breath()
 
