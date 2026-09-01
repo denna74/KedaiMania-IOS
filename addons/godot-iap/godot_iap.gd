@@ -71,6 +71,8 @@ var _apple_async_cancellation_generation := 0
 var _apple_async_timeout_seconds := 30.0
 var _apple_async_restore_timeout_seconds := 120.0
 var _apple_async_ui_timeout_seconds := 300.0
+var last_products_error: String = ""
+var last_products_native_count: int = 0
 
 # Platform detection
 var _platform: String = ""
@@ -309,6 +311,10 @@ func fetch_products(request) -> Array:
 				var product = _product_from_dict(product_dict)
 				if product != null:
 					products.append(product)
+				else:
+					# Keep the native product available even when a newer
+					# StoreKit field is not understood by this type schema.
+					products.append(product_dict)
 
 	return products
 
@@ -364,11 +370,13 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 			var signal_result = await _call_apple_async("fetchProducts", [request_json])
 			print("[GodotIap] fetchProducts native result: ", signal_result)
 			var products_array: Array = []
+			last_products_error = String(signal_result.get("error", ""))
 			if signal_result.get("success", false):
 				var products_json = signal_result.get("productsJson", "[]")
 				var parsed = JSON.parse_string(products_json)
 				if parsed is Array:
 					products_array = parsed
+			last_products_native_count = products_array.size()
 			return {
 				"products": products_array,
 				"error": signal_result.get("error", "")
