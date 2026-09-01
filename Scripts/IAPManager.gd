@@ -17,6 +17,7 @@ var _pending_restorations: Array[Dictionary] = []
 var _purchases_by_token: Dictionary = {}
 
 func _ready():
+	await get_tree().process_frame
 	if ClassDB.class_exists("GodotIap") or Engine.has_singleton("GodotIap"):
 		var iap = _get_iap()
 		if iap:
@@ -24,7 +25,9 @@ func _ready():
 			iap.disconnected.connect(_on_disconnected)
 			iap.purchase_updated.connect(_on_purchase_updated)
 			iap.purchase_error.connect(_on_purchase_error)
-			iap.init_connection()
+			var connected = await iap.init_connection()
+			if not connected:
+				print("OpenIAP connection failed")
 	else:
 		print("OpenIAP plugin not found")
 
