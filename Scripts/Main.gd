@@ -129,6 +129,7 @@ func _ready():
 	Ads.mood_reward_failed.connect(_on_ads_mood_reward_failed)
 	if IAP:
 		IAP.kedai_unlocked.connect(_on_iap_kedai_unlocked)
+		IAP.purchase_failed.connect(_on_iap_purchase_failed)
 		IAP.purchases_restored.connect(_on_purchases_restored)
 		if not IAP.get_pending_restorations().is_empty():
 			_on_purchases_restored()
@@ -1602,6 +1603,7 @@ func _on_iap_pressed():
 		_on_buy_popup_close()
 		_refresh_kedai_row(current_buy_kedai_id)
 		return
+	_show_iap_status(Lang.t("iap_starting"))
 	var result = IAP.purchase_kedai(current_buy_kedai_id)
 	match result:
 		IAP.PurchaseResult.UNAVAILABLE:
@@ -1618,6 +1620,9 @@ func _show_iap_status(text: String):
 	if lbl:
 		lbl.text = text
 		lbl.visible = true
+
+func _on_iap_purchase_failed(message: String):
+	_show_iap_status(message)
 
 func _on_iap_kedai_unlocked(kedai_id: String, token: String):
 	Global.unlock_kedai(kedai_id)

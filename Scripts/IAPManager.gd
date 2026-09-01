@@ -7,6 +7,7 @@ signal kedai_unlocked(kedai_id: String, token: String)
 signal kitchen_extended(token: String)
 signal extend_kitchen_failed
 signal purchases_restored
+signal purchase_failed(message: String)
 
 enum PurchaseResult { OK, NOT_INITIALIZED, NO_SKU, UNAVAILABLE }
 
@@ -141,7 +142,10 @@ func purchase_kedai(kedai_id: String) -> int:
 		},
 		"type": "in-app"
 	}
-	iap.request_purchase(props)
+	var request_result = iap.request_purchase(props)
+	print("Purchase request result: ", request_result)
+	if request_result is Dictionary and not request_result.get("success", true):
+		_on_purchase_error(request_result)
 	return PurchaseResult.OK
 
 func purchase_extend_kitchen() -> int:
@@ -160,7 +164,11 @@ func purchase_extend_kitchen() -> int:
 		"type": "in-app"
 	}
 	_extend_purchase_pending = true
-	iap.request_purchase(props)
+	var request_result = iap.request_purchase(props)
+	print("Purchase request result: ", request_result)
+	if request_result is Dictionary and not request_result.get("success", true):
+		_extend_purchase_pending = false
+		_on_purchase_error(request_result)
 	return PurchaseResult.OK
 
 func _on_purchase_updated(purchase: Dictionary):
@@ -180,7 +188,9 @@ func _on_purchase_updated(purchase: Dictionary):
 				break
 
 func _on_purchase_error(error: Dictionary):
-	print("Purchase failed: ", error.get("message", "unknown"))
+	var message = String(error.get("message", error.get("error", "unknown")))
+	print("Purchase failed: ", message, " code=", error.get("code", "unknown"))
+	purchase_failed.emit(message)
 	if _extend_purchase_pending:
 		_extend_purchase_pending = false
 		extend_kitchen_failed.emit()
