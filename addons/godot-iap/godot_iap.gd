@@ -371,7 +371,9 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 			print("[GodotIap] fetchProducts native result: ", signal_result)
 			var products_array: Array = []
 			last_products_error = String(signal_result.get("error", ""))
-			if signal_result.get("success", false):
+			if signal_result.get("products") is Array:
+				products_array = signal_result.get("products")
+			elif signal_result.get("success", false):
 				var products_json = signal_result.get("productsJson", "[]")
 				var parsed = JSON.parse_string(products_json)
 				if parsed is Array:

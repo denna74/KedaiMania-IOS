@@ -101,7 +101,8 @@ func _fetch_products():
 		_check_pending_restorations()
 	else:
 		print("Failed to load product details")
-		last_products_status = "Products: none"
+		if iap.last_products_native_count == 0 and iap.last_products_error.is_empty():
+			last_products_status = "StoreKit returned no matching products"
 		# StoreKit can still resolve a valid product during requestPurchase.
 		# Do not block the purchase flow solely because the metadata query was empty.
 		_products_ready = true
