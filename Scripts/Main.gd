@@ -1554,14 +1554,16 @@ func _show_buy_popup(kedai_id: String):
 		iap_price_lbl.size = Vector2(160, 20)
 		buy_popup.add_child(iap_price_lbl)
 
-		var iap_status_lbl = Label.new()
+		var iap_status_lbl = TextEdit.new()
 		iap_status_lbl.name = "iap_status_lbl"
-		iap_status_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		iap_status_lbl.editable = false
+		iap_status_lbl.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+		iap_status_lbl.scroll_fit_content_height = false
 		iap_status_lbl.add_theme_font_override("font", fredoka)
-		iap_status_lbl.add_theme_font_size_override("font_size", 14)
+		iap_status_lbl.add_theme_font_size_override("font_size", 10)
 		iap_status_lbl.add_theme_color_override("font_color", Color(0.8, 0.3, 0.3))
 		iap_status_lbl.position = Vector2(270, 482)
-		iap_status_lbl.size = Vector2(160, 20)
+		iap_status_lbl.size = Vector2(160, 58)
 		iap_status_lbl.visible = false
 		buy_popup.add_child(iap_status_lbl)
 
@@ -1618,7 +1620,7 @@ func _on_iap_pressed():
 func _show_iap_status(text: String):
 	if not buy_popup:
 		return
-	var lbl = buy_popup.get_node("iap_status_lbl") as Label
+	var lbl = buy_popup.get_node("iap_status_lbl") as TextEdit
 	if lbl:
 		lbl.text = text
 		lbl.visible = true
