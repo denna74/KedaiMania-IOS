@@ -368,7 +368,20 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 		var request_json = JSON.stringify(normalized_request)
 		if _is_apple():
 			print("[GodotIap] Calling fetchProducts with: ", request_json)
-			var signal_result = await _call_apple_async("fetchProducts", [request_json])
+			# The embedded OpenIAP bridge exposes fetchProducts(argsJson) as a
+			# compatibility method. It starts the StoreKit query and publishes
+			# the complete result through products_fetched.
+			var pending = _native_plugin.call("fetchProducts", request_json)
+			var signal_result: Dictionary = {}
+			if pending is String:
+				var immediate = JSON.parse_string(pending)
+				if immediate is Dictionary:
+					signal_result = immediate
+			if signal_result.get("status", "") == "pending" \
+					or signal_result.get("requestId", "") != "":
+				signal_result = await products_fetched
+			elif signal_result.is_empty():
+				signal_result = await products_fetched
 			print("[GodotIap] fetchProducts native result: ", signal_result)
 			last_products_response = JSON.stringify(signal_result)
 			var products_array: Array = []
