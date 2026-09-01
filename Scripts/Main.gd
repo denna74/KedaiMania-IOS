@@ -1624,7 +1624,11 @@ func _show_iap_status(text: String):
 		lbl.visible = true
 
 func _on_iap_purchase_failed(message: String):
-	_show_iap_status(message)
+	var diagnostic = IAP.last_products_status
+	if not diagnostic.is_empty() and diagnostic != message and diagnostic != "Fetching: ":
+		_show_iap_status("%s\n%s" % [diagnostic, message])
+	else:
+		_show_iap_status(message)
 
 func _on_iap_kedai_unlocked(kedai_id: String, token: String):
 	Global.unlock_kedai(kedai_id)

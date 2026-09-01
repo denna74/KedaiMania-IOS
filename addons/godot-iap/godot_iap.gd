@@ -378,6 +378,8 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 				var parsed = JSON.parse_string(products_json)
 				if parsed is Array:
 					products_array = parsed
+				elif parsed is Dictionary and parsed.get("products") is Array:
+					products_array = parsed.get("products")
 			last_products_native_count = products_array.size()
 			return {
 				"products": products_array,
