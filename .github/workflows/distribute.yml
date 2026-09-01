@@ -54,24 +54,6 @@ jobs:
             mv "$RUNNER_TEMP/templates/templates/"* ~/Library/Application\ Support/Godot/export_templates/4.7.stable/
           fi
 
-      - name: Install matching Godot IAP release
-        run: |
-          IAP_VERSION="1.2.9"
-          curl -L --fail --silent --show-error \
-            -o "$RUNNER_TEMP/godot-iap.zip" \
-            "https://github.com/hyochan/godot-iap/releases/download/${IAP_VERSION}/godot-iap-${IAP_VERSION}.zip"
-          rm -rf "$RUNNER_TEMP/godot-iap"
-          mkdir -p "$RUNNER_TEMP/godot-iap"
-          unzip -q "$RUNNER_TEMP/godot-iap.zip" -d "$RUNNER_TEMP/godot-iap"
-          test -f "$RUNNER_TEMP/godot-iap/addons/godot-iap/bin/ios/GodotIap.framework/GodotIap"
-          test -f "$RUNNER_TEMP/godot-iap/addons/godot-iap/bin/ios/SwiftGodotRuntime.framework/SwiftGodotRuntime"
-          rm -rf addons/godot-iap/bin/ios/GodotIap.framework
-          rm -rf addons/godot-iap/bin/ios/SwiftGodotRuntime.framework
-          cp -R "$RUNNER_TEMP/godot-iap/addons/godot-iap/bin/ios/GodotIap.framework" \
-            addons/godot-iap/bin/ios/
-          cp -R "$RUNNER_TEMP/godot-iap/addons/godot-iap/bin/ios/SwiftGodotRuntime.framework" \
-            addons/godot-iap/bin/ios/
-
       - name: Import Code Signing Certificate
         env:
           BUILD_CERTIFICATE_P12: ${{ secrets.BUILD_CERTIFICATE_P12 }}
