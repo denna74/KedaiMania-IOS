@@ -362,6 +362,7 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 		if _is_apple():
 			print("[GodotIap] Calling fetchProducts with: ", request_json)
 			var signal_result = await _call_apple_async("fetchProducts", [request_json])
+			print("[GodotIap] fetchProducts native result: ", signal_result)
 			var products_array: Array = []
 			if signal_result.get("success", false):
 				var products_json = signal_result.get("productsJson", "[]")

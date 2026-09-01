@@ -18,6 +18,7 @@ var _extend_purchase_pending: bool = false
 var _pending_purchase_sku: String = ""
 var _pending_restorations: Array[Dictionary] = []
 var _purchases_by_token: Dictionary = {}
+var last_products_status: String = ""
 
 func _ready():
 	await get_tree().process_frame
@@ -75,13 +76,28 @@ func _fetch_products():
 		"skus": _get_all_skus(),
 		"type": "in-app"
 	}
+	print("Fetching IAP products: ", request["skus"])
+	last_products_status = "Fetching: %s" % ", ".join(request["skus"])
 	var products = await iap.fetch_products(request)
+	var fetched_skus: Array[String] = []
+	for product in products:
+		if product is Object and product.has_method("to_dict"):
+			product = product.to_dict()
+		if product is Dictionary:
+			var product_id = String(product.get("id", product.get("productId", "")))
+			if not product_id.is_empty():
+				fetched_skus.append(product_id)
+	print("IAP products returned: ", fetched_skus)
+	last_products_status = "Products: %s" % (
+		", ".join(fetched_skus) if not fetched_skus.is_empty() else "none"
+	)
 	if products.size() > 0:
 		_products_ready = true
 		print("Product details loaded: ", products.size(), " products")
 		_check_pending_restorations()
 	else:
 		print("Failed to load product details")
+		last_products_status = "Products: none"
 		# StoreKit can still resolve a valid product during requestPurchase.
 		# Do not block the purchase flow solely because the metadata query was empty.
 		_products_ready = true

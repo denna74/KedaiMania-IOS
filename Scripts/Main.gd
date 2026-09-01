@@ -1612,6 +1612,8 @@ func _on_iap_pressed():
 			_show_iap_status(Lang.t("iap_not_ready"))
 		IAP.PurchaseResult.NO_SKU:
 			_show_iap_status(Lang.t("iap_unavailable"))
+	if result == IAP.PurchaseResult.OK and not IAP.last_products_status.is_empty():
+		_show_iap_status(IAP.last_products_status)
 
 func _show_iap_status(text: String):
 	if not buy_popup:
