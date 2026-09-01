@@ -166,7 +166,15 @@ func _on_products_fetched(result: Dictionary) -> void:
 			if waiter is AppleAsyncWaiter:
 				waiter.complete(result)
 		elif not _apple_async_terminal_keys.has(cache_key):
-			_cache_apple_async_result(cache_key, result)
+			var delivered := false
+			for fallback_key in _apple_async_waiters.keys():
+				var fallback_waiter = _apple_async_waiters[fallback_key]
+				if fallback_waiter is AppleAsyncWaiter:
+					fallback_waiter.complete(result)
+					delivered = true
+					break
+			if not delivered:
+				_cache_apple_async_result(cache_key, result)
 	else:
 		# Older GodotIap.framework builds emit the completion payload without
 		# request metadata. There is normally one pending Apple query at a
@@ -377,7 +385,32 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 		var request_json = JSON.stringify(normalized_request)
 		if _is_apple():
 			print("[GodotIap] Calling fetchProducts with: ", request_json)
-			var signal_result = await _call_apple_async("fetchProducts", [request_json])
+			var waiter_key := "fetchProducts:unmatched"
+			var waiter := AppleAsyncWaiter.new()
+			_apple_async_waiters[waiter_key] = waiter
+			var tree := get_tree()
+			if tree == null:
+				_apple_async_waiters.erase(waiter_key)
+				return { "products": [], "error": "StoreKit is not ready" }
+			var timeout_timer := tree.create_timer(_apple_async_timeout_seconds)
+			var timeout_callback := func() -> void:
+				_complete_apple_async_waiter(waiter_key, {
+					"success": false,
+					"code": "service-timeout",
+					"error": "fetchProducts timed out after %.1f seconds" % _apple_async_timeout_seconds,
+				})
+			waiter.arm_timeout(timeout_timer, timeout_callback)
+			var pending = _native_plugin.call("fetchProducts", request_json)
+			var signal_result: Dictionary = {}
+			if pending is String:
+				var immediate = JSON.parse_string(pending)
+				if immediate is Dictionary:
+					signal_result = immediate
+			if not signal_result.has("products") and signal_result.get("status", "") == "pending":
+				signal_result = await waiter.completed
+			elif signal_result.is_empty():
+				signal_result = await waiter.completed
+			_apple_async_waiters.erase(waiter_key)
 			print("[GodotIap] fetchProducts native result: ", signal_result)
 			last_products_response = JSON.stringify(signal_result)
 			var products_array: Array = []
