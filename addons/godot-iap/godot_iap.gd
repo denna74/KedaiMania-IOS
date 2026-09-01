@@ -384,7 +384,7 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 		normalized_request["type"] = query_type
 		var request_json = JSON.stringify(normalized_request)
 		if _is_apple():
-			print("[GodotIap] Calling fetchProducts with: ", request_json)
+			print("[GodotIap] Calling fetchProductsWithSkus with: ", request_json)
 			var waiter_key := "fetchProducts:unmatched"
 			var waiter := AppleAsyncWaiter.new()
 			_apple_async_waiters[waiter_key] = waiter
@@ -397,10 +397,14 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 				_complete_apple_async_waiter(waiter_key, {
 					"success": false,
 					"code": "service-timeout",
-					"error": "fetchProducts timed out after %.1f seconds" % _apple_async_timeout_seconds,
+					"error": "fetchProductsWithSkus timed out after %.1f seconds" % _apple_async_timeout_seconds,
 				})
 			waiter.arm_timeout(timeout_timer, timeout_callback)
-			var pending = _native_plugin.call("fetchProducts", request_json)
+			var pending = _native_plugin.call(
+				"fetchProductsWithSkus",
+				normalized_request["skus"],
+				query_type
+			)
 			var signal_result: Dictionary = {}
 			if pending is String:
 				var immediate = JSON.parse_string(pending)
@@ -411,7 +415,7 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 			elif signal_result.is_empty():
 				signal_result = await waiter.completed
 			_apple_async_waiters.erase(waiter_key)
-			print("[GodotIap] fetchProducts native result: ", signal_result)
+			print("[GodotIap] fetchProductsWithSkus native result: ", signal_result)
 			last_products_response = JSON.stringify(signal_result)
 			var products_array: Array = []
 			last_products_error = String(signal_result.get("error", ""))
