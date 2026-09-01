@@ -12,6 +12,7 @@ enum PurchaseResult { OK, NOT_INITIALIZED, NO_SKU, UNAVAILABLE }
 
 var _initialized: bool = false
 var _products_ready: bool = false
+var _products_fetch_started: bool = false
 var _extend_purchase_pending: bool = false
 var _pending_restorations: Array[Dictionary] = []
 var _purchases_by_token: Dictionary = {}
@@ -49,6 +50,8 @@ func get_pending_restorations() -> Array[Dictionary]:
 	return result
 
 func _on_connected():
+	if _initialized:
+		return
 	_initialized = true
 	print("OpenIAP connected")
 	_fetch_products()
@@ -59,8 +62,12 @@ func _on_disconnected():
 	print("OpenIAP disconnected")
 
 func _fetch_products():
+	if _products_fetch_started:
+		return
+	_products_fetch_started = true
 	var iap = _get_iap()
 	if not iap:
+		_products_fetch_started = false
 		return
 	var request = {
 		"skus": _get_all_skus(),
@@ -73,6 +80,9 @@ func _fetch_products():
 		_check_pending_restorations()
 	else:
 		print("Failed to load product details")
+		# StoreKit can still resolve a valid product during requestPurchase.
+		# Do not block the purchase flow solely because the metadata query was empty.
+		_products_ready = true
 
 func _get_all_skus() -> Array:
 	var skus := []
@@ -122,8 +132,6 @@ func purchase_kedai(kedai_id: String) -> int:
 		return PurchaseResult.UNAVAILABLE
 	if not _initialized:
 		return PurchaseResult.NOT_INITIALIZED
-	if not _products_ready:
-		return PurchaseResult.NOT_INITIALIZED
 	var sku = IAPConfig.get_sku(kedai_id)
 	if sku.is_empty():
 		return PurchaseResult.NO_SKU
@@ -141,8 +149,6 @@ func purchase_extend_kitchen() -> int:
 	if not iap:
 		return PurchaseResult.UNAVAILABLE
 	if not _initialized:
-		return PurchaseResult.NOT_INITIALIZED
-	if not _products_ready:
 		return PurchaseResult.NOT_INITIALIZED
 	var sku = IAPConfig.EXTEND_KITCHEN_SKU
 	if sku.is_empty():
