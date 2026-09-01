@@ -104,6 +104,23 @@ jobs:
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
 
+      - name: Verify IPA Bundle Identifier
+        run: |
+          rm -rf "$RUNNER_TEMP/kedai-ipa-check"
+          mkdir -p "$RUNNER_TEMP/kedai-ipa-check"
+          unzip -q build/ios/KedaiMania.ipa -d "$RUNNER_TEMP/kedai-ipa-check"
+          APP_PATH=$(find "$RUNNER_TEMP/kedai-ipa-check/Payload" -maxdepth 1 -name "*.app" -print -quit)
+          if [ -z "$APP_PATH" ]; then
+            echo "::error::No .app bundle found inside the IPA"
+            exit 1
+          fi
+          BUNDLE_ID=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP_PATH/Info.plist")
+          echo "IPA bundle identifier: $BUNDLE_ID"
+          if [ "$BUNDLE_ID" != "com.kedaimania" ]; then
+            echo "::error::Unexpected IPA bundle identifier: $BUNDLE_ID"
+            exit 1
+          fi
+
       - name: Upload IPA Artifact
         if: always()
         uses: actions/upload-artifact@v4
