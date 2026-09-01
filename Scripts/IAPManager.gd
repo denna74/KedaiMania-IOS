@@ -91,7 +91,9 @@ func _fetch_products():
 	last_products_status = "Products: %s" % (
 		", ".join(fetched_skus) if not fetched_skus.is_empty() else "none"
 	)
-	if products.is_empty() and iap.last_products_native_count > 0:
+	if products.is_empty() and not iap.last_products_response.is_empty():
+		last_products_status = "StoreKit response:\n%s" % iap.last_products_response
+	elif products.is_empty() and iap.last_products_native_count > 0:
 		last_products_status = "StoreKit returned products, but mapping failed"
 	elif products.is_empty() and not iap.last_products_error.is_empty():
 		last_products_status = "StoreKit error: %s" % iap.last_products_error

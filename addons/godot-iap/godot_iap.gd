@@ -73,6 +73,7 @@ var _apple_async_restore_timeout_seconds := 120.0
 var _apple_async_ui_timeout_seconds := 300.0
 var last_products_error: String = ""
 var last_products_native_count: int = 0
+var last_products_response: String = ""
 
 # Platform detection
 var _platform: String = ""
@@ -369,6 +370,7 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 			print("[GodotIap] Calling fetchProducts with: ", request_json)
 			var signal_result = await _call_apple_async("fetchProducts", [request_json])
 			print("[GodotIap] fetchProducts native result: ", signal_result)
+			last_products_response = JSON.stringify(signal_result)
 			var products_array: Array = []
 			last_products_error = String(signal_result.get("error", ""))
 			if signal_result.get("products") is Array:
