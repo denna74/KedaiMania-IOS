@@ -370,6 +370,21 @@ func _product_from_dict(product_dict: Dictionary) -> Variant:
 		return Types.ProductIOS.from_dict(product_dict)
 	return null
 
+func _extract_products(value) -> Array:
+	if value is Array:
+		return value
+	if value is String:
+		var parsed = JSON.parse_string(value)
+		if parsed != null:
+			return _extract_products(parsed)
+	if value is Dictionary:
+		for key in ["products", "productsJson", "result", "data", "value"]:
+			if value.has(key):
+				var products := _extract_products(value[key])
+				if not products.is_empty():
+					return products
+	return []
+
 ## Internal: Fetch products with a native Dictionary payload.
 func _fetch_products_raw(request: Dictionary) -> Dictionary:
 	print("[GodotIap] _fetch_products_raw called with: ", request)
@@ -389,17 +404,8 @@ func _fetch_products_raw(request: Dictionary) -> Dictionary:
 			var signal_result: Dictionary = await products_fetched
 			print("[GodotIap] fetchProducts native result: ", signal_result)
 			last_products_response = JSON.stringify(signal_result)
-			var products_array: Array = []
+			var products_array := _extract_products(signal_result)
 			last_products_error = String(signal_result.get("error", ""))
-			if signal_result.get("products") is Array:
-				products_array = signal_result.get("products")
-			else:
-				var products_json = signal_result.get("productsJson", "[]")
-				var parsed = JSON.parse_string(products_json)
-				if parsed is Array:
-					products_array = parsed
-				elif parsed is Dictionary and parsed.get("products") is Array:
-					products_array = parsed.get("products")
 			last_products_native_count = products_array.size()
 			return {
 				"products": products_array,
