@@ -15,6 +15,7 @@ var _initialized: bool = false
 var _products_ready: bool = false
 var _products_fetch_started: bool = false
 var _extend_purchase_pending: bool = false
+var _pending_purchase_sku: String = ""
 var _pending_restorations: Array[Dictionary] = []
 var _purchases_by_token: Dictionary = {}
 
@@ -142,6 +143,7 @@ func purchase_kedai(kedai_id: String) -> int:
 		},
 		"type": "in-app"
 	}
+	_pending_purchase_sku = sku
 	var request_result = iap.request_purchase(props)
 	print("Purchase request result: ", request_result)
 	if request_result is Dictionary and not request_result.get("success", true):
@@ -164,6 +166,7 @@ func purchase_extend_kitchen() -> int:
 		"type": "in-app"
 	}
 	_extend_purchase_pending = true
+	_pending_purchase_sku = sku
 	var request_result = iap.request_purchase(props)
 	print("Purchase request result: ", request_result)
 	if request_result is Dictionary and not request_result.get("success", true):
@@ -189,8 +192,12 @@ func _on_purchase_updated(purchase: Dictionary):
 
 func _on_purchase_error(error: Dictionary):
 	var message = String(error.get("message", error.get("error", "unknown")))
+	var sku = String(error.get("productId", _pending_purchase_sku))
+	if message.to_lower().contains("sku") and not sku.is_empty():
+		message = "%s: %s" % [message, sku]
 	print("Purchase failed: ", message, " code=", error.get("code", "unknown"))
 	purchase_failed.emit(message)
+	_pending_purchase_sku = ""
 	if _extend_purchase_pending:
 		_extend_purchase_pending = false
 		extend_kitchen_failed.emit()
