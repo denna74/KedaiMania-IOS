@@ -300,7 +300,7 @@ func _apply_purchase_updated_listener_options_apple() -> void:
 ## See: https://openiap.dev/docs/apis/fetch-products
 func fetch_products(request) -> Array:
 	print("[GodotIap] fetch_products called")
-	var result = await _fetch_products_raw(request.to_dict())
+	var result = await _fetch_products_raw(_as_dictionary(request))
 	var products: Array = []
 
 	if result.has("products"):

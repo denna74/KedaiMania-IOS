@@ -29,11 +29,7 @@ func _ready():
 		print("OpenIAP plugin not found")
 
 func _get_iap():
-	if ClassDB.class_exists("GodotIap") and ClassDB.can_instantiate("GodotIap"):
-		return ClassDB.instantiate("GodotIap")
-	if Engine.has_singleton("GodotIap"):
-		return Engine.get_singleton("GodotIap")
-	return null
+	return get_node_or_null("/root/GodotIapPlugin")
 
 func is_available() -> bool:
 	return _get_iap() != null
@@ -85,8 +81,12 @@ func _check_pending_restorations():
 	var iap = _get_iap()
 	if not iap:
 		return
-	var result = await iap.restore_purchases()
-	if result and result.get("success", false):
+	var restore_result = await iap.restore_purchases()
+	if not restore_result.success:
+		print("Failed to restore purchases")
+		return
+	var result = await iap.get_available_purchases_result()
+	if result.get("success", false):
 		var purchases = result.get("purchases", [])
 		if purchases.is_empty():
 			print("No pending purchases to restore")
@@ -96,8 +96,8 @@ func _check_pending_restorations():
 			var product_id = purchase.get("productId", "")
 			if product_id.is_empty():
 				continue
-			var state = purchase.get("state", -1)
-			if state != 0:
+			var state = purchase.get("purchaseState", "")
+			if state != "purchased":
 				continue
 			var token = purchase.get("transactionId", "")
 			if token.is_empty():
@@ -175,9 +175,17 @@ func _on_purchase_error(error: Dictionary):
 		_extend_purchase_pending = false
 		extend_kitchen_failed.emit()
 
+func finalize_purchase(token: String, sku: String):
+	var purchase = _purchases_by_token.get(token)
+	if not purchase is Dictionary:
+		push_error("Cannot finalize purchase without its purchase payload: %s" % token)
+		return
+	_acknowledge_purchase(purchase, sku)
+	_purchases_by_token.erase(token)
+
 func _acknowledge_purchase(purchase: Dictionary, sku: String):
 	var iap = _get_iap()
 	if not iap:
 		return
 	var is_consumable = IAPConfig.get_type(sku) == IAPConfig.SkuType.CONSUMABLE
-	iap.finish_transaction(purchase, is_consumable)
+	iap.finish_transaction_dict(purchase, is_consumable)
