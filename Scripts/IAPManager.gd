@@ -3,6 +3,8 @@ extends Node
 # Cross-platform IAP manager using OpenIAP (StoreKit 2 on iOS).
 # Registered as the `IAP` autoload in project.godot.
 
+const Types = preload("res://addons/godot-iap/types.gd")
+
 signal kedai_unlocked(kedai_id: String, token: String)
 signal kitchen_extended(token: String)
 signal extend_kitchen_failed
@@ -19,6 +21,9 @@ var _pending_purchase_sku: String = ""
 var _pending_restorations: Array[Dictionary] = []
 var _purchases_by_token: Dictionary = {}
 var last_products_status: String = ""
+var _last_products_raw: Dictionary = {}
+var _last_products_native_count: int = 0
+var _last_products_error: String = ""
 
 func _ready():
 	await get_tree().process_frame
@@ -30,6 +35,7 @@ func _ready():
 	iap.disconnected.connect(_on_disconnected)
 	iap.purchase_updated.connect(_on_purchase_updated)
 	iap.purchase_error.connect(_on_purchase_error)
+	iap.products_fetched.connect(_on_products_fetched_raw)
 	var connected = await iap.init_connection()
 	if connected and not _initialized:
 		_on_connected()
@@ -64,6 +70,15 @@ func _on_disconnected():
 	_products_ready = false
 	print("OpenIAP disconnected")
 
+func _on_products_fetched_raw(result: Dictionary) -> void:
+	if not result.has("productsJson") and not result.has("products"):
+		return
+	_last_products_raw = result
+	var products_json = String(result.get("productsJson", "[]"))
+	var parsed = JSON.parse_string(products_json)
+	_last_products_native_count = (parsed.size() if parsed is Array else 0)
+	_last_products_error = String(result.get("error", ""))
+
 func _fetch_products():
 	if _products_fetch_started:
 		return
@@ -91,19 +106,20 @@ func _fetch_products():
 	last_products_status = "Products: %s" % (
 		", ".join(fetched_skus) if not fetched_skus.is_empty() else "none"
 	)
-	if products.is_empty() and not iap.last_products_response.is_empty():
-		last_products_status = "StoreKit response:\n%s" % iap.last_products_response
-	elif products.is_empty() and iap.last_products_native_count > 0:
+	await get_tree().process_frame
+	if products.is_empty() and not _last_products_raw.is_empty():
+		last_products_status = "StoreKit response:\n%s" % JSON.stringify(_last_products_raw)
+	elif products.is_empty() and _last_products_native_count > 0:
 		last_products_status = "StoreKit returned products, but mapping failed"
-	elif products.is_empty() and not iap.last_products_error.is_empty():
-		last_products_status = "StoreKit error: %s" % iap.last_products_error
+	elif products.is_empty() and not _last_products_error.is_empty():
+		last_products_status = "StoreKit error: %s" % _last_products_error
 	if products.size() > 0:
 		_products_ready = true
 		print("Product details loaded: ", products.size(), " products")
 		_check_pending_restorations()
 	else:
 		print("Failed to load product details")
-		if iap.last_products_native_count == 0 and iap.last_products_error.is_empty():
+		if _last_products_native_count == 0 and _last_products_error.is_empty():
 			last_products_status = "StoreKit returned no matching products"
 		# StoreKit can still resolve a valid product during requestPurchase.
 		# Do not block the purchase flow solely because the metadata query was empty.
@@ -132,24 +148,55 @@ func _check_pending_restorations():
 			return
 		print("Found ", purchases.size(), " purchase(s) to reconcile")
 		for purchase in purchases:
-			var product_id = purchase.get("productId", "")
+			var purchase_dict = _to_canonical_purchase_dict(purchase)
+			if purchase_dict.is_empty():
+				continue
+			var product_id = purchase_dict.get("productId", "")
 			if product_id.is_empty():
 				continue
-			var state = purchase.get("purchaseState", "")
-			if state != "purchased":
+			if not _is_purchased(purchase_dict.get("purchaseState", "")):
 				continue
-			var token = purchase.get("transactionId", "")
+			var token = purchase_dict.get("transactionId", "")
 			if token.is_empty():
 				continue
 			if Global.is_purchase_processed(token):
 				print("Purchase already delivered, cleaning up: ", product_id, " token=", token)
-				_acknowledge_purchase(purchase, product_id)
+				_acknowledge_purchase(purchase_dict, product_id)
 			else:
-				_purchases_by_token[token] = purchase
+				_purchases_by_token[token] = purchase_dict
 				print("Pending delivery for: ", product_id, " token=", token)
 				_pending_restorations.append({"sku": product_id, "token": token})
 		if not _pending_restorations.is_empty():
 			purchases_restored.emit()
+
+func _to_canonical_purchase_dict(purchase) -> Dictionary:
+	var purchase_dict: Dictionary
+	if purchase is Dictionary:
+		purchase_dict = purchase
+	elif purchase is Object and purchase.has_method("to_dict"):
+		purchase_dict = purchase.to_dict()
+	else:
+		return {}
+	if String(purchase_dict.get("productId", "")) != "":
+		return purchase_dict
+	var mapped := purchase_dict.duplicate(true)
+	if not mapped.has("productId") and mapped.has("product_id"):
+		mapped["productId"] = mapped["product_id"]
+	if not mapped.has("transactionId") and mapped.has("transaction_id"):
+		mapped["transactionId"] = mapped["transaction_id"]
+	if not mapped.has("purchaseState") and mapped.has("purchase_state"):
+		mapped["purchaseState"] = mapped["purchase_state"]
+	mapped.erase("product_id")
+	mapped.erase("transaction_id")
+	mapped.erase("purchase_state")
+	if String(mapped.get("productId", "")) != "":
+		return mapped
+	return {}
+
+func _is_purchased(state) -> bool:
+	if state is int:
+		return state == Types.PurchaseState.PURCHASED
+	return String(state).strip_edges().to_lower() == "purchased"
 
 func purchase_kedai(kedai_id: String) -> int:
 	var iap = _get_iap()
