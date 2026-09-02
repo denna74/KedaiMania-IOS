@@ -1630,7 +1630,6 @@ func _on_iap_kedai_unlocked(kedai_id: String, token: String):
 	Global.unlock_kedai(kedai_id)
 	var sku = IAPConfig.get_sku(kedai_id)
 	Global.mark_purchase_processed(token, sku)
-	IAP.finalize_purchase(token, sku)
 	_on_buy_popup_close()
 	_refresh_kedai_row(kedai_id)
 
@@ -1645,7 +1644,7 @@ func _on_purchases_restored():
 			if IAPConfig.SKUS[wid] == sku:
 				Global.unlock_kedai(wid)
 				Global.mark_purchase_processed(token, sku)
-				IAP.finalize_purchase(token, sku)
+				IAP.finish_purchase(token, sku)
 				_refresh_kedai_row(wid)
 				break
 

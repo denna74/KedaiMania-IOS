@@ -277,6 +277,17 @@ func finalize_purchase(token: String, sku: String):
 	if not purchase is Dictionary:
 		push_error("Cannot finalize purchase without its purchase payload: %s" % token)
 		return
+	if IAPConfig.get_type(sku) == IAPConfig.SkuType.NON_CONSUMABLE:
+		_purchases_by_token.erase(token)
+		return
+	_acknowledge_purchase(purchase, sku)
+	_purchases_by_token.erase(token)
+
+func finish_purchase(token: String, sku: String):
+	var purchase = _purchases_by_token.get(token)
+	if not purchase is Dictionary:
+		push_error("Cannot finish purchase without its purchase payload: %s" % token)
+		return
 	_acknowledge_purchase(purchase, sku)
 	_purchases_by_token.erase(token)
 
