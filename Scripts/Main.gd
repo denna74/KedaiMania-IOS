@@ -1053,6 +1053,7 @@ func _show_instant_cash_popup():
 
 		if not IAP or not IAP.is_products_ready():
 			btn.disabled = true
+			btn.modulate = Color(0.5, 0.5, 0.5, 0.7)
 
 	var cancel_tex = make_texture("res://Art/Buttons/button_batal.png", 200, 50)
 	var cancel_btn = TextureButton.new()
@@ -1083,6 +1084,7 @@ func _on_instant_cash_billing_ready():
 		var btn = _instant_cash_panel.get_node_or_null("CashOption%d" % i)
 		if btn:
 			btn.disabled = false
+			btn.modulate = Color.WHITE
 
 func _on_instant_cash_option_pressed(sku_key: String, btn: TextureButton, iap_status: Label):
 	if not IAP:
