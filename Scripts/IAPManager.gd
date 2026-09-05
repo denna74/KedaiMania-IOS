@@ -5,12 +5,12 @@ extends Node
 
 const Types = preload("res://addons/godot-iap/types.gd")
 
-signal kedai_unlocked(kedai_id: String, token: String)
 signal kitchen_extended(token: String)
+signal instant_cash_purchased(token: String, sku: String)
 signal extend_kitchen_failed
 signal purchases_restored
-signal restore_completed(found: bool)
 signal purchase_failed(message: String)
+signal billing_ready
 
 enum PurchaseResult { OK, NOT_INITIALIZED, NO_SKU, UNAVAILABLE, BUSY }
 
@@ -21,7 +21,6 @@ var _extend_purchase_pending: bool = false
 var _pending_purchase_sku: String = ""
 var _pending_restorations: Array[Dictionary] = []
 var _purchases_by_token: Dictionary = {}
-var _restore_in_progress: bool = false
 var _purchase_in_progress: bool = false
 var last_products_status: String = ""
 var _last_products_raw: Dictionary = {}
@@ -54,33 +53,15 @@ func is_available() -> bool:
 func is_initialized() -> bool:
 	return _initialized
 
+func is_products_ready() -> bool:
+	return _products_ready
+
 func get_pending_restorations() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for p in _pending_restorations:
 		if not Global.is_purchase_processed(p["token"]):
 			result.append({"sku": p["sku"], "token": p["token"]})
 	return result
-
-func restore_purchases() -> int:
-	var iap = _get_iap()
-	if not iap:
-		return PurchaseResult.UNAVAILABLE
-	if not _initialized:
-		return PurchaseResult.NOT_INITIALIZED
-	if _purchase_in_progress:
-		return PurchaseResult.BUSY
-	if _restore_in_progress:
-		return PurchaseResult.OK
-	while not _products_ready and _initialized:
-		await get_tree().process_frame
-	if not _initialized:
-		return PurchaseResult.NOT_INITIALIZED
-	_restore_in_progress = true
-	print("Restoring purchases...")
-	var found = await _check_pending_restorations()
-	_restore_in_progress = false
-	restore_completed.emit(found)
-	return PurchaseResult.OK
 
 func _on_connected():
 	if _initialized:
@@ -140,6 +121,8 @@ func _fetch_products():
 	if products.size() > 0:
 		_products_ready = true
 		print("Product details loaded: ", products.size(), " products")
+		billing_ready.emit()
+		_check_pending_restorations()
 	else:
 		print("Failed to load product details")
 		if _last_products_native_count == 0 and _last_products_error.is_empty():
@@ -147,6 +130,8 @@ func _fetch_products():
 		# StoreKit can still resolve a valid product during requestPurchase.
 		# Do not block the purchase flow solely because the metadata query was empty.
 		_products_ready = true
+		billing_ready.emit()
+		_check_pending_restorations()
 
 func _get_all_skus() -> Array:
 	var skus := []
@@ -232,32 +217,6 @@ func _is_purchased(state) -> bool:
 		return state == Types.PurchaseState.PURCHASED
 	return String(state).strip_edges().to_lower() == "purchased"
 
-func purchase_kedai(kedai_id: String) -> int:
-	var iap = _get_iap()
-	if not iap:
-		return PurchaseResult.UNAVAILABLE
-	if not _initialized:
-		return PurchaseResult.NOT_INITIALIZED
-	var sku = IAPConfig.get_sku(kedai_id)
-	if sku.is_empty():
-		return PurchaseResult.NO_SKU
-	if _restore_in_progress:
-		return PurchaseResult.BUSY
-	var props = {
-		"requestPurchase": {
-			"apple": {"sku": sku}
-		},
-		"type": "in-app"
-	}
-	_pending_purchase_sku = sku
-	_purchase_in_progress = true
-	var request_result = iap.request_purchase(props)
-	print("Purchase request result: ", request_result)
-	if request_result is Dictionary and not request_result.get("success", true):
-		_purchase_in_progress = false
-		_on_purchase_error(request_result)
-	return PurchaseResult.OK
-
 func purchase_extend_kitchen() -> int:
 	var iap = _get_iap()
 	if not iap:
@@ -267,8 +226,6 @@ func purchase_extend_kitchen() -> int:
 	var sku = IAPConfig.EXTEND_KITCHEN_SKU
 	if sku.is_empty():
 		return PurchaseResult.NO_SKU
-	if _restore_in_progress:
-		return PurchaseResult.BUSY
 	var props = {
 		"requestPurchase": {
 			"apple": {"sku": sku}
@@ -286,6 +243,29 @@ func purchase_extend_kitchen() -> int:
 		_on_purchase_error(request_result)
 	return PurchaseResult.OK
 
+func purchase_instant_cash(cash_sku: String) -> int:
+	var iap = _get_iap()
+	if not iap:
+		return PurchaseResult.UNAVAILABLE
+	if not _initialized:
+		return PurchaseResult.NOT_INITIALIZED
+	if cash_sku.is_empty():
+		return PurchaseResult.NO_SKU
+	var props = {
+		"requestPurchase": {
+			"apple": {"sku": cash_sku}
+		},
+		"type": "in-app"
+	}
+	_pending_purchase_sku = cash_sku
+	_purchase_in_progress = true
+	var request_result = iap.request_purchase(props)
+	print("Purchase request result: ", request_result)
+	if request_result is Dictionary and not request_result.get("success", true):
+		_purchase_in_progress = false
+		_on_purchase_error(request_result)
+	return PurchaseResult.OK
+
 func _on_purchase_updated(purchase: Dictionary):
 	_purchase_in_progress = false
 	var product_id = purchase.get("productId", "")
@@ -297,11 +277,10 @@ func _on_purchase_updated(purchase: Dictionary):
 	if product_id == IAPConfig.EXTEND_KITCHEN_SKU:
 		_extend_purchase_pending = false
 		kitchen_extended.emit(token)
+	elif IAPConfig.get_cash_reward(product_id) > 0:
+		instant_cash_purchased.emit(token, product_id)
 	else:
-		for wid in IAPConfig.SKUS:
-			if IAPConfig.SKUS[wid] == product_id:
-				kedai_unlocked.emit(wid, token)
-				break
+		print("Unhandled purchase updated: ", product_id)
 
 func _on_purchase_error(error: Dictionary):
 	_purchase_in_progress = false
@@ -320,17 +299,6 @@ func finalize_purchase(token: String, sku: String):
 	var purchase = _purchases_by_token.get(token)
 	if not purchase is Dictionary:
 		push_error("Cannot finalize purchase without its purchase payload: %s" % token)
-		return
-	if IAPConfig.get_type(sku) == IAPConfig.SkuType.NON_CONSUMABLE:
-		_purchases_by_token.erase(token)
-		return
-	_acknowledge_purchase(purchase, sku)
-	_purchases_by_token.erase(token)
-
-func finish_purchase(token: String, sku: String):
-	var purchase = _purchases_by_token.get(token)
-	if not purchase is Dictionary:
-		push_error("Cannot finish purchase without its purchase payload: %s" % token)
 		return
 	_acknowledge_purchase(purchase, sku)
 	_purchases_by_token.erase(token)

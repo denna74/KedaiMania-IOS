@@ -46,6 +46,10 @@ var mood_tex: Texture2D
 var mood_silhouette_tex: Texture2D
 var instant_mood_btn: TextureButton
 var instant_mood_tex: Texture2D
+var instant_cash_btn: TextureButton
+var instant_cash_tex: Texture2D
+var _instant_cash_overlay: ColorRect = null
+var _instant_cash_panel: Control = null
 
 var savings_label: Label
 var level_select_panel: Control
@@ -128,12 +132,11 @@ func _ready():
 	Ads.mood_reward_earned.connect(_on_ads_mood_reward_earned)
 	Ads.mood_reward_failed.connect(_on_ads_mood_reward_failed)
 	if IAP:
-		IAP.kedai_unlocked.connect(_on_iap_kedai_unlocked)
-		IAP.purchase_failed.connect(_on_iap_purchase_failed)
 		IAP.purchases_restored.connect(_on_purchases_restored)
-		IAP.restore_completed.connect(_on_restore_completed)
+		IAP.billing_ready.connect(_on_instant_cash_billing_ready)
 		if not IAP.get_pending_restorations().is_empty():
 			_on_purchases_restored()
+	Global.money_changed.connect(_on_money_changed)
 
 
 func make_texture(path: String, w: int, h: int) -> Texture2D:
@@ -287,6 +290,20 @@ func setup_ui():
 	instant_mood_btn.button_down.connect(_on_btn_down.bind(instant_mood_btn))
 	instant_mood_btn.button_up.connect(_on_btn_up.bind(instant_mood_btn))
 	add_child(instant_mood_btn)
+
+	instant_cash_tex = make_texture("res://Art/Buttons/instant_cash_eng.png", 170, 40)
+	instant_cash_btn = TextureButton.new()
+	instant_cash_btn.name = "instant_cash_btn"
+	if instant_cash_tex:
+		instant_cash_btn.texture_normal = instant_cash_tex
+	instant_cash_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	instant_cash_btn.position = Vector2(285, 125)
+	instant_cash_btn.size = Vector2(170, 40)
+	instant_cash_btn.visible = false
+	instant_cash_btn.pressed.connect(_on_instant_cash_btn_pressed)
+	instant_cash_btn.button_down.connect(_on_btn_down.bind(instant_cash_btn))
+	instant_cash_btn.button_up.connect(_on_btn_up.bind(instant_cash_btn))
+	add_child(instant_cash_btn)
 
 	var kedai_data = [
 		["Kedai Nasi Goreng", "nasi_goreng", true, "res://Art/Kedais/kedai_nasi_goreng.png"],
@@ -446,6 +463,10 @@ func _on_language_changed():
 	if mood_label_node:
 		mood_label_node.text = Lang.t("mood_label")
 	savings_label.text = Lang.t("savings") + " : " + _format_money(Global.money)
+	if instant_cash_btn:
+		var cash_tex = make_texture("res://Art/Buttons/instant_cash_eng.png" if is_en else "res://Art/Buttons/instant_cash_id.png", 170, 40)
+		if cash_tex:
+			instant_cash_btn.texture_normal = cash_tex
 	var build_tex = build_btn_eng if is_en else build_btn_id
 	for btn in build_buttons:
 		btn.texture_normal = build_tex
@@ -556,6 +577,10 @@ func _show_kedai_menu():
 		instant_mood_btn.visible = true
 		instant_mood_btn.modulate = Color(1, 1, 1, 0)
 		tween2.tween_property(instant_mood_btn, "modulate", Color(1, 1, 1, 0.4) if Global.mood_level >= 3 else Color(1, 1, 1, 1), 0.3)
+	if instant_cash_btn:
+		instant_cash_btn.visible = true
+		instant_cash_btn.modulate = Color(1, 1, 1, 0)
+		tween2.tween_property(instant_cash_btn, "modulate", Color(1, 1, 1, 1), 0.3)
 	await tween2.finished
 
 
@@ -597,6 +622,8 @@ func _show_main_menu():
 		tween.tween_property(tr, "modulate", Color(1, 1, 1, 0), 0.3)
 	if instant_mood_btn:
 		tween.tween_property(instant_mood_btn, "modulate", Color(1, 1, 1, 0), 0.3)
+	if instant_cash_btn:
+		tween.tween_property(instant_cash_btn, "modulate", Color(1, 1, 1, 0), 0.3)
 	await tween.finished
 
 	for i in kedai_buttons.size():
@@ -629,6 +656,8 @@ func _show_main_menu():
 		tr.visible = false
 	if instant_mood_btn:
 		instant_mood_btn.visible = false
+	if instant_cash_btn:
+		instant_cash_btn.visible = false
 
 	var logo = get_node("logo")
 	var start_btn = get_node("start_btn")
@@ -899,16 +928,215 @@ func update_mood_display():
 		instant_mood_btn.visible = in_kedai
 		instant_mood_btn.disabled = at_max
 		instant_mood_btn.modulate = Color(1, 1, 1, 0.4) if at_max else Color(1, 1, 1, 1)
+	if instant_cash_btn:
+		instant_cash_btn.visible = current_state == MenuState.STATE_KEDAI
+		instant_cash_btn.modulate = Color(1, 1, 1, 1)
 
 func _on_instant_mood_btn_pressed():
 	click_player.play(0.0)
 	mood_popup.show_instant_mood_popup()
+
+func _on_instant_cash_btn_pressed():
+	click_player.play(0.0)
+	_show_instant_cash_popup()
+
+func _show_instant_cash_popup():
+	if _instant_cash_overlay:
+		return
+	var baloo2 = ResourceLoader.load("res://Assets/Fonts/Baloo2-Bold.ttf")
+	var overlay = ColorRect.new()
+	overlay.name = "instant_cash_overlay"
+	overlay.color = Color(0, 0, 0, 0.7)
+	overlay.anchor_right = 1.0
+	overlay.anchor_bottom = 1.0
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+	_instant_cash_overlay = overlay
+
+	var popup = Control.new()
+	popup.name = "instant_cash_panel"
+	popup.anchor_left = 0.5
+	popup.anchor_top = 0.5
+	popup.anchor_right = 0.5
+	popup.anchor_bottom = 0.5
+	popup.offset_left = -210.0
+	popup.offset_top = -175.0
+	popup.offset_right = 210.0
+	popup.offset_bottom = 175.0
+	add_child(popup)
+	_instant_cash_panel = popup
+
+	var bg = Panel.new()
+	bg.anchor_right = 1.0
+	bg.anchor_bottom = 1.0
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.12, 0.12, 0.16, 0.95)
+	style.corner_radius_top_left = 16
+	style.corner_radius_top_right = 16
+	style.corner_radius_bottom_left = 16
+	style.corner_radius_bottom_right = 16
+	bg.add_theme_stylebox_override("panel", style)
+	popup.add_child(bg)
+
+	var title = Label.new()
+	title.anchor_left = 0.0
+	title.anchor_right = 1.0
+	title.offset_top = 10.0
+	title.offset_bottom = 45.0
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", baloo2)
+	title.add_theme_font_size_override("font_size", 20)
+	title.add_theme_color_override("font_color", Color(0.95, 0.75, 0.15))
+	title.text = Lang.t("instant_cash_title")
+	popup.add_child(title)
+
+	var body = Label.new()
+	body.anchor_left = 0.0
+	body.anchor_right = 1.0
+	body.offset_top = 50.0
+	body.offset_bottom = 74.0
+	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_theme_font_size_override("font_size", 13)
+	body.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
+	body.text = Lang.t("instant_cash_body")
+	popup.add_child(body)
+
+	var iap_status = Label.new()
+	iap_status.name = "IapStatus"
+	iap_status.anchor_left = 0.0
+	iap_status.anchor_right = 1.0
+	iap_status.offset_top = 270.0
+	iap_status.offset_bottom = 290.0
+	iap_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	iap_status.add_theme_color_override("font_color", Color(1, 0.85, 0, 1))
+	iap_status.add_theme_font_size_override("font_size", 11)
+	iap_status.text = "" if IAP and IAP.is_products_ready() else Lang.t("iap_not_ready")
+	popup.add_child(iap_status)
+
+	var sku_keys := ["instant_cash_1", "instant_cash_2", "instant_cash_3"]
+	var icon_paths := [
+		"res://Art/Buttons/instant_cash_1.png",
+		"res://Art/Buttons/instant_cash_2.png",
+		"res://Art/Buttons/instant_cash_3.png",
+	]
+	var price_labels := ["$1", "$2", "$3"]
+
+	for i in range(3):
+		var btn = TextureButton.new()
+		btn.name = "CashOption%d" % i
+		btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+		var tex = load(icon_paths[i])
+		if tex:
+			var img = tex.get_image()
+			if img:
+				img.resize(380, 62, Image.INTERPOLATE_LANCZOS)
+				btn.texture_normal = ImageTexture.create_from_image(img)
+		btn.position = Vector2(20, 78 + i * 62)
+		btn.size = Vector2(380, 62)
+		btn.pressed.connect(_on_instant_cash_option_pressed.bind(sku_keys[i], btn, iap_status))
+		popup.add_child(btn)
+
+		var price = Label.new()
+		price.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		price.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		price.add_theme_font_override("font", baloo2)
+		price.add_theme_font_size_override("font_size", 18)
+		price.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		price.position = Vector2(295, 78 + i * 62)
+		price.size = Vector2(90, 62)
+		price.text = price_labels[i]
+		price.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		popup.add_child(price)
+
+		if not IAP or not IAP.is_products_ready():
+			btn.disabled = true
+			btn.modulate = Color(0.5, 0.5, 0.5, 0.7)
+
+	var cancel_tex = make_texture(
+		"res://Art/Buttons/button_cancel.png" if Lang.current_language == "en" else "res://Art/Buttons/button_batal.png",
+		200, 50
+	)
+	var cancel_btn = TextureButton.new()
+	cancel_btn.name = "CancelBtn"
+	cancel_btn.texture_normal = cancel_tex
+	cancel_btn.size = Vector2(200, 50)
+	cancel_btn.position = Vector2(110, 295)
+	cancel_btn.pressed.connect(_close_instant_cash_popup)
+	cancel_btn.button_down.connect(_on_btn_down.bind(cancel_btn))
+	cancel_btn.button_up.connect(_on_btn_up.bind(cancel_btn))
+	popup.add_child(cancel_btn)
+
+func _close_instant_cash_popup():
+	if is_instance_valid(_instant_cash_panel):
+		_instant_cash_panel.queue_free()
+	_instant_cash_panel = null
+	if is_instance_valid(_instant_cash_overlay):
+		_instant_cash_overlay.queue_free()
+	_instant_cash_overlay = null
+
+func _on_instant_cash_billing_ready():
+	if not is_instance_valid(_instant_cash_panel):
+		return
+	var iap_status = _instant_cash_panel.get_node_or_null("IapStatus")
+	if iap_status:
+		iap_status.text = ""
+	for i in range(3):
+		var btn = _instant_cash_panel.get_node_or_null("CashOption%d" % i)
+		if btn:
+			btn.disabled = false
+			btn.modulate = Color.WHITE
+
+func _on_instant_cash_option_pressed(sku_key: String, btn: TextureButton, iap_status: Label):
+	if not IAP:
+		return
+	btn.disabled = true
+	var sku = IAPConfig.get_sku(sku_key)
+	var result = IAP.purchase_instant_cash(sku)
+	match result:
+		IAP.PurchaseResult.OK:
+			iap_status.text = Lang.t("iap_starting")
+		IAP.PurchaseResult.NOT_INITIALIZED:
+			iap_status.text = Lang.t("iap_not_ready")
+			btn.disabled = false
+		IAP.PurchaseResult.UNAVAILABLE:
+			iap_status.text = Lang.t("iap_unavailable")
+			btn.disabled = false
+		IAP.PurchaseResult.NO_SKU:
+			iap_status.text = Lang.t("iap_unavailable")
+			btn.disabled = false
+		IAP.PurchaseResult.BUSY:
+			iap_status.text = Lang.t("iap_busy")
+			btn.disabled = false
+	IAP.instant_cash_purchased.connect(_on_instant_cash_purchased.bind(sku_key), CONNECT_ONE_SHOT)
+	IAP.purchase_failed.connect(_on_instant_cash_purchase_failed.bind(btn, iap_status), CONNECT_ONE_SHOT)
+
+func _on_instant_cash_purchased(token: String, purchased_sku: String, expected_key: String):
+	if purchased_sku != IAPConfig.get_sku(expected_key):
+		return
+	var reward = IAPConfig.get_cash_reward(purchased_sku)
+	Global.add_money(reward)
+	Global.mark_purchase_processed(token, purchased_sku)
+	IAP.finalize_purchase(token, purchased_sku)
+	_close_instant_cash_popup()
+
+func _on_instant_cash_purchase_failed(_sku: String, btn: TextureButton, iap_status: Label):
+	if is_instance_valid(iap_status):
+		iap_status.text = Lang.t("iap_unavailable")
+	if is_instance_valid(btn):
+		btn.disabled = false
 
 func _on_mood_popup_recovered():
 	update_mood_display()
 
 func _on_global_mood_recovered():
 	update_mood_display()
+
+func _on_money_changed(_amount: int):
+	savings_label.text = Lang.t("savings") + " : " + _format_money(Global.money)
+	if level_select_panel:
+		var ls_sav = level_select_panel.get_node_or_null("ls_savings")
+		if ls_sav:
+			ls_sav.text = Lang.t("savings") + " : " + _format_money(Global.money)
 
 
 
@@ -1350,6 +1578,8 @@ func _show_level_select():
 		tween.tween_property(tr, "modulate", Color(1, 1, 1, 0), 0.3)
 	if instant_mood_btn:
 		tween.tween_property(instant_mood_btn, "modulate", Color(1, 1, 1, 0), 0.3)
+	if instant_cash_btn:
+		tween.tween_property(instant_cash_btn, "modulate", Color(1, 1, 1, 0), 0.3)
 	await tween.finished
 
 	for i in kedai_buttons.size():
@@ -1376,6 +1606,8 @@ func _show_level_select():
 		tr.visible = false
 	if instant_mood_btn:
 		instant_mood_btn.visible = false
+	if instant_cash_btn:
+		instant_cash_btn.visible = false
 
 	Global.process_mood_recovery()
 	_update_level_select_mood_savings()
@@ -1502,7 +1734,7 @@ func _show_buy_popup(kedai_id: String):
 	if trade_tex:
 		var trade_btn = TextureButton.new()
 		trade_btn.texture_normal = trade_tex
-		trade_btn.position = Vector2(30, 405)
+		trade_btn.position = Vector2(140, 405)
 		trade_btn.size = Vector2(160, 50)
 		if Global.money >= prices.game_money:
 			trade_btn.pressed.connect(_on_trade_pressed)
@@ -1519,7 +1751,7 @@ func _show_buy_popup(kedai_id: String):
 		price_lbl.add_theme_font_override("font", fredoka)
 		price_lbl.add_theme_font_size_override("font_size", 14)
 		price_lbl.add_theme_color_override("font_color", Color(0.8, 0.8, 0.3) if Global.money >= prices.game_money else Color(0.8, 0.3, 0.3))
-		price_lbl.position = Vector2(50, 460)
+		price_lbl.position = Vector2(160, 460)
 		price_lbl.size = Vector2(160, 20)
 		buy_popup.add_child(price_lbl)
 
@@ -1530,56 +1762,9 @@ func _show_buy_popup(kedai_id: String):
 			insuff_lbl.add_theme_font_override("font", fredoka)
 			insuff_lbl.add_theme_font_size_override("font_size", 14)
 			insuff_lbl.add_theme_color_override("font_color", Color(0.8, 0.3, 0.3))
-			insuff_lbl.position = Vector2(50, 482)
+			insuff_lbl.position = Vector2(160, 482)
 			insuff_lbl.size = Vector2(160, 20)
 			buy_popup.add_child(insuff_lbl)
-
-	var buy_tex = load("res://Art/Buttons/button_buy.png" if is_en else "res://Art/Buttons/button_beli.png") as Texture2D
-	if buy_tex:
-		var buy_btn = TextureButton.new()
-		buy_btn.texture_normal = buy_tex
-		buy_btn.position = Vector2(250, 405)
-		buy_btn.size = Vector2(160, 50)
-		buy_btn.pressed.connect(_on_iap_pressed)
-		buy_btn.button_down.connect(_on_btn_down.bind(buy_btn))
-		buy_btn.button_up.connect(_on_btn_up.bind(buy_btn))
-		buy_popup.add_child(buy_btn)
-
-		var iap_price_lbl = Label.new()
-		iap_price_lbl.text = Lang.t("iap_price") % str(prices.apple_price)
-		iap_price_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		iap_price_lbl.add_theme_font_override("font", fredoka)
-		iap_price_lbl.add_theme_font_size_override("font_size", 12)
-		iap_price_lbl.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
-		iap_price_lbl.position = Vector2(270, 460)
-		iap_price_lbl.size = Vector2(160, 20)
-		buy_popup.add_child(iap_price_lbl)
-
-		var iap_status_lbl = TextEdit.new()
-		iap_status_lbl.name = "iap_status_lbl"
-		iap_status_lbl.editable = false
-		iap_status_lbl.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
-		iap_status_lbl.scroll_fit_content_height = false
-		iap_status_lbl.add_theme_font_override("font", fredoka)
-		iap_status_lbl.add_theme_font_size_override("font_size", 10)
-		iap_status_lbl.add_theme_color_override("font_color", Color(0.8, 0.3, 0.3))
-		iap_status_lbl.position = Vector2(50, 508)
-		iap_status_lbl.size = Vector2(160, 36)
-		iap_status_lbl.visible = false
-		buy_popup.add_child(iap_status_lbl)
-
-		var restore_eng = load("res://Art/Buttons/button_restore_eng.png") as Texture2D
-		var restore_id = load("res://Art/Buttons/button_restore_id.png") as Texture2D
-		if restore_eng and restore_id:
-			var restore_btn = TextureButton.new()
-			restore_btn.name = "restore_btn"
-			restore_btn.texture_normal = restore_eng if is_en else restore_id
-			restore_btn.position = Vector2(250, 485)
-			restore_btn.size = Vector2(200, 50)
-			restore_btn.pressed.connect(_on_restore_pressed)
-			restore_btn.button_down.connect(_on_btn_down.bind(restore_btn))
-			restore_btn.button_up.connect(_on_btn_up.bind(restore_btn))
-			buy_popup.add_child(restore_btn)
 
 	var close_btn = Button.new()
 	close_btn.text = "X"
@@ -1612,64 +1797,6 @@ func _on_trade_pressed():
 		_on_buy_popup_close()
 		_refresh_kedai_row(current_buy_kedai_id)
 
-func _on_iap_pressed():
-	if not IAP:
-		return
-	if Global.is_kedai_unlocked(current_buy_kedai_id):
-		_on_buy_popup_close()
-		_refresh_kedai_row(current_buy_kedai_id)
-		return
-	_show_iap_status(Lang.t("iap_starting"))
-	var result = IAP.purchase_kedai(current_buy_kedai_id)
-	match result:
-		IAP.PurchaseResult.UNAVAILABLE:
-			_show_iap_status(Lang.t("iap_unavailable"))
-		IAP.PurchaseResult.NOT_INITIALIZED:
-			_show_iap_status(Lang.t("iap_not_ready"))
-		IAP.PurchaseResult.NO_SKU:
-			_show_iap_status(Lang.t("iap_unavailable"))
-		IAP.PurchaseResult.BUSY:
-			_show_iap_status(Lang.t("iap_busy"))
-
-func _show_iap_status(text: String):
-	if not buy_popup:
-		return
-	var lbl = buy_popup.get_node("iap_status_lbl") as TextEdit
-	if lbl:
-		lbl.text = text
-		lbl.visible = true
-
-func _on_iap_purchase_failed(_message: String):
-	_show_iap_status(Lang.t("iap_unavailable"))
-
-func _on_restore_pressed():
-	if not IAP:
-		_show_iap_status(Lang.t("iap_unavailable"))
-		return
-	_show_iap_status(Lang.t("restore_starting"))
-	var result = await IAP.restore_purchases()
-	match result:
-		IAP.PurchaseResult.UNAVAILABLE:
-			_show_iap_status(Lang.t("iap_unavailable"))
-		IAP.PurchaseResult.NOT_INITIALIZED:
-			_show_iap_status(Lang.t("iap_not_ready"))
-		IAP.PurchaseResult.BUSY:
-			_show_iap_status(Lang.t("iap_busy"))
-
-func _on_restore_completed(found: bool):
-	if found:
-		if buy_popup:
-			_on_buy_popup_close()
-	else:
-		_show_iap_status(Lang.t("restore_none"))
-
-func _on_iap_kedai_unlocked(kedai_id: String, token: String):
-	Global.unlock_kedai(kedai_id)
-	var sku = IAPConfig.get_sku(kedai_id)
-	Global.mark_purchase_processed(token, sku)
-	_on_buy_popup_close()
-	_refresh_kedai_row(kedai_id)
-
 func _on_purchases_restored():
 	var pending = IAP.get_pending_restorations()
 	for p in pending:
@@ -1677,13 +1804,12 @@ func _on_purchases_restored():
 		var token = p["token"]
 		if sku == IAPConfig.EXTEND_KITCHEN_SKU:
 			continue
-		for wid in IAPConfig.SKUS:
-			if IAPConfig.SKUS[wid] == sku:
-				Global.unlock_kedai(wid)
-				Global.mark_purchase_processed(token, sku)
-				IAP.finish_purchase(token, sku)
-				_refresh_kedai_row(wid)
-				break
+		var cash_reward = IAPConfig.get_cash_reward(sku)
+		if cash_reward > 0:
+			if not Global.is_purchase_processed(token):
+				Global.add_money(cash_reward)
+			Global.mark_purchase_processed(token, sku)
+			IAP.finalize_purchase(token, sku)
 
 func _refresh_kedai_row(kedai_id: String):
 	var idx = _KEDAI_IDS.find(kedai_id)
