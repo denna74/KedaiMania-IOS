@@ -30,7 +30,7 @@ Sfx="*res://Scripts/SfxManager.gd"
 UnityAds="*res://autoload/UnityAds.gd"
 Ads="*res://Scripts/AdsManager.gd"
 IAPConfig="*res://Scripts/IAPConfig.gd"
-GodotIapPlugin="*res://addons/godot-iap/godot_iap.gd"
+GodotIapPlugin="*uid://bjpanv85ye4ay"
 IAP="*res://Scripts/IAPManager.gd"
 
 [display]

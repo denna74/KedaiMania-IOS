@@ -131,6 +131,7 @@ func _ready():
 		IAP.kedai_unlocked.connect(_on_iap_kedai_unlocked)
 		IAP.purchase_failed.connect(_on_iap_purchase_failed)
 		IAP.purchases_restored.connect(_on_purchases_restored)
+		IAP.restore_completed.connect(_on_restore_completed)
 		if not IAP.get_pending_restorations().is_empty():
 			_on_purchases_restored()
 
@@ -1562,10 +1563,23 @@ func _show_buy_popup(kedai_id: String):
 		iap_status_lbl.add_theme_font_override("font", fredoka)
 		iap_status_lbl.add_theme_font_size_override("font_size", 10)
 		iap_status_lbl.add_theme_color_override("font_color", Color(0.8, 0.3, 0.3))
-		iap_status_lbl.position = Vector2(270, 482)
-		iap_status_lbl.size = Vector2(160, 58)
+		iap_status_lbl.position = Vector2(50, 508)
+		iap_status_lbl.size = Vector2(160, 36)
 		iap_status_lbl.visible = false
 		buy_popup.add_child(iap_status_lbl)
+
+		var restore_eng = load("res://Art/Buttons/button_restore_eng.png") as Texture2D
+		var restore_id = load("res://Art/Buttons/button_restore_id.png") as Texture2D
+		if restore_eng and restore_id:
+			var restore_btn = TextureButton.new()
+			restore_btn.name = "restore_btn"
+			restore_btn.texture_normal = restore_eng if is_en else restore_id
+			restore_btn.position = Vector2(250, 485)
+			restore_btn.size = Vector2(200, 50)
+			restore_btn.pressed.connect(_on_restore_pressed)
+			restore_btn.button_down.connect(_on_btn_down.bind(restore_btn))
+			restore_btn.button_up.connect(_on_btn_up.bind(restore_btn))
+			buy_popup.add_child(restore_btn)
 
 	var close_btn = Button.new()
 	close_btn.text = "X"
@@ -1625,6 +1639,25 @@ func _show_iap_status(text: String):
 
 func _on_iap_purchase_failed(_message: String):
 	_show_iap_status(Lang.t("iap_unavailable"))
+
+func _on_restore_pressed():
+	if not IAP:
+		_show_iap_status(Lang.t("iap_unavailable"))
+		return
+	_show_iap_status(Lang.t("restore_starting"))
+	var result = await IAP.restore_purchases()
+	match result:
+		IAP.PurchaseResult.UNAVAILABLE:
+			_show_iap_status(Lang.t("iap_unavailable"))
+		IAP.PurchaseResult.NOT_INITIALIZED:
+			_show_iap_status(Lang.t("iap_not_ready"))
+
+func _on_restore_completed(found: bool):
+	if found:
+		if buy_popup:
+			_on_buy_popup_close()
+	else:
+		_show_iap_status(Lang.t("restore_none"))
 
 func _on_iap_kedai_unlocked(kedai_id: String, token: String):
 	Global.unlock_kedai(kedai_id)

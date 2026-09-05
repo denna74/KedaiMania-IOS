@@ -9,6 +9,7 @@ signal kedai_unlocked(kedai_id: String, token: String)
 signal kitchen_extended(token: String)
 signal extend_kitchen_failed
 signal purchases_restored
+signal restore_completed(found: bool)
 signal purchase_failed(message: String)
 
 enum PurchaseResult { OK, NOT_INITIALIZED, NO_SKU, UNAVAILABLE }
@@ -20,6 +21,7 @@ var _extend_purchase_pending: bool = false
 var _pending_purchase_sku: String = ""
 var _pending_restorations: Array[Dictionary] = []
 var _purchases_by_token: Dictionary = {}
+var _restore_in_progress: bool = false
 var last_products_status: String = ""
 var _last_products_raw: Dictionary = {}
 var _last_products_native_count: int = 0
@@ -57,6 +59,25 @@ func get_pending_restorations() -> Array[Dictionary]:
 		if not Global.is_purchase_processed(p["token"]):
 			result.append({"sku": p["sku"], "token": p["token"]})
 	return result
+
+func restore_purchases() -> int:
+	var iap = _get_iap()
+	if not iap:
+		return PurchaseResult.UNAVAILABLE
+	if not _initialized:
+		return PurchaseResult.NOT_INITIALIZED
+	if _restore_in_progress:
+		return PurchaseResult.OK
+	while not _products_ready and _initialized:
+		await get_tree().process_frame
+	if not _initialized:
+		return PurchaseResult.NOT_INITIALIZED
+	_restore_in_progress = true
+	print("Restoring purchases...")
+	var found = await _check_pending_restorations()
+	_restore_in_progress = false
+	restore_completed.emit(found)
+	return PurchaseResult.OK
 
 func _on_connected():
 	if _initialized:
@@ -132,21 +153,22 @@ func _get_all_skus() -> Array:
 	skus.append(IAPConfig.EXTEND_KITCHEN_SKU)
 	return skus
 
-func _check_pending_restorations():
+func _check_pending_restorations() -> bool:
 	var iap = _get_iap()
 	if not iap:
-		return
+		return false
 	var restore_result = await iap.restore_purchases()
 	if not restore_result.success:
 		print("Failed to restore purchases")
-		return
+		return false
 	var result = await iap.get_available_purchases_result()
 	if result.get("success", false):
 		var purchases = result.get("purchases", [])
 		if purchases.is_empty():
 			print("No pending purchases to restore")
-			return
+			return false
 		print("Found ", purchases.size(), " purchase(s) to reconcile")
+		var added := false
 		for purchase in purchases:
 			var purchase_dict = _to_canonical_purchase_dict(purchase)
 			if purchase_dict.is_empty():
@@ -163,11 +185,21 @@ func _check_pending_restorations():
 				print("Purchase already delivered, cleaning up: ", product_id, " token=", token)
 				_acknowledge_purchase(purchase_dict, product_id)
 			else:
+				var already_pending := false
+				for p in _pending_restorations:
+					if p["token"] == token:
+						already_pending = true
+						break
+				if already_pending:
+					continue
 				_purchases_by_token[token] = purchase_dict
 				print("Pending delivery for: ", product_id, " token=", token)
 				_pending_restorations.append({"sku": product_id, "token": token})
+				added = true
 		if not _pending_restorations.is_empty():
 			purchases_restored.emit()
+		return added
+	return false
 
 func _to_canonical_purchase_dict(purchase) -> Dictionary:
 	var purchase_dict: Dictionary
