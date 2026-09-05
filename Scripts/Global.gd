@@ -1,6 +1,7 @@
 extends Node
 
 signal mood_recovered
+signal money_changed(amount: int)
 
 var money: int
 var level: int
@@ -238,6 +239,11 @@ func mark_purchase_processed(token: String, sku: String):
 
 func unlock_kedai(kedai_id: String):
 	kedai_unlocked[kedai_id] = true
+	save_game()
+
+func add_money(amount: int):
+	money += amount
+	money_changed.emit(money)
 	save_game()
 
 func switch_to_kedai(kedai_id: String):
