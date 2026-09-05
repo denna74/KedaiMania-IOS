@@ -136,6 +136,7 @@ func _ready():
 		IAP.purchase_failed.connect(_on_iap_purchase_failed)
 		IAP.purchases_restored.connect(_on_purchases_restored)
 		IAP.restore_completed.connect(_on_restore_completed)
+		IAP.billing_ready.connect(_on_instant_cash_billing_ready)
 		if not IAP.get_pending_restorations().is_empty():
 			_on_purchases_restored()
 	Global.money_changed.connect(_on_money_changed)
@@ -1012,7 +1013,7 @@ func _show_instant_cash_popup():
 	iap_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	iap_status.add_theme_color_override("font_color", Color(1, 0.85, 0, 1))
 	iap_status.add_theme_font_size_override("font_size", 11)
-	iap_status.text = "" if IAP and IAP.is_initialized() else Lang.t("iap_not_ready")
+	iap_status.text = "" if IAP and IAP.is_products_ready() else Lang.t("iap_not_ready")
 	popup.add_child(iap_status)
 
 	var sku_keys := ["instant_cash_1", "instant_cash_2", "instant_cash_3"]
@@ -1050,7 +1051,7 @@ func _show_instant_cash_popup():
 		price.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		popup.add_child(price)
 
-		if not IAP or not IAP.is_initialized():
+		if not IAP or not IAP.is_products_ready():
 			btn.disabled = true
 
 	var cancel_tex = make_texture("res://Art/Buttons/button_batal.png", 200, 50)
@@ -1071,6 +1072,17 @@ func _close_instant_cash_popup():
 	if is_instance_valid(_instant_cash_overlay):
 		_instant_cash_overlay.queue_free()
 	_instant_cash_overlay = null
+
+func _on_instant_cash_billing_ready():
+	if not is_instance_valid(_instant_cash_panel):
+		return
+	var iap_status = _instant_cash_panel.get_node_or_null("IapStatus")
+	if iap_status:
+		iap_status.text = ""
+	for i in range(3):
+		var btn = _instant_cash_panel.get_node_or_null("CashOption%d" % i)
+		if btn:
+			btn.disabled = false
 
 func _on_instant_cash_option_pressed(sku_key: String, btn: TextureButton, iap_status: Label):
 	if not IAP:

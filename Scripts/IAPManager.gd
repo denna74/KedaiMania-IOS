@@ -12,6 +12,7 @@ signal extend_kitchen_failed
 signal purchases_restored
 signal restore_completed(found: bool)
 signal purchase_failed(message: String)
+signal billing_ready
 
 enum PurchaseResult { OK, NOT_INITIALIZED, NO_SKU, UNAVAILABLE, BUSY }
 
@@ -54,6 +55,9 @@ func is_available() -> bool:
 
 func is_initialized() -> bool:
 	return _initialized
+
+func is_products_ready() -> bool:
+	return _products_ready
 
 func get_pending_restorations() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
@@ -141,6 +145,7 @@ func _fetch_products():
 	if products.size() > 0:
 		_products_ready = true
 		print("Product details loaded: ", products.size(), " products")
+		billing_ready.emit()
 	else:
 		print("Failed to load product details")
 		if _last_products_native_count == 0 and _last_products_error.is_empty():
@@ -148,6 +153,7 @@ func _fetch_products():
 		# StoreKit can still resolve a valid product during requestPurchase.
 		# Do not block the purchase flow solely because the metadata query was empty.
 		_products_ready = true
+		billing_ready.emit()
 
 func _get_all_skus() -> Array:
 	var skus := []
