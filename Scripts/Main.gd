@@ -960,9 +960,9 @@ func _show_instant_cash_popup():
 	popup.anchor_right = 0.5
 	popup.anchor_bottom = 0.5
 	popup.offset_left = -210.0
-	popup.offset_top = -175.0
+	popup.offset_top = -185.0
 	popup.offset_right = 210.0
-	popup.offset_bottom = 175.0
+	popup.offset_bottom = 185.0
 	add_child(popup)
 	_instant_cash_panel = popup
 
@@ -1005,8 +1005,8 @@ func _show_instant_cash_popup():
 	iap_status.name = "IapStatus"
 	iap_status.anchor_left = 0.0
 	iap_status.anchor_right = 1.0
-	iap_status.offset_top = 270.0
-	iap_status.offset_bottom = 290.0
+	iap_status.offset_top = 290.0
+	iap_status.offset_bottom = 310.0
 	iap_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	iap_status.add_theme_color_override("font_color", Color(1, 0.85, 0, 1))
 	iap_status.add_theme_font_size_override("font_size", 11)
@@ -1031,7 +1031,7 @@ func _show_instant_cash_popup():
 			if img:
 				img.resize(380, 62, Image.INTERPOLATE_LANCZOS)
 				btn.texture_normal = ImageTexture.create_from_image(img)
-		btn.position = Vector2(20, 78 + i * 62)
+		btn.position = Vector2(20, 78 + i * 72)
 		btn.size = Vector2(380, 62)
 		btn.pressed.connect(_on_instant_cash_option_pressed.bind(sku_keys[i], btn, iap_status))
 		popup.add_child(btn)
@@ -1042,7 +1042,7 @@ func _show_instant_cash_popup():
 		price.add_theme_font_override("font", baloo2)
 		price.add_theme_font_size_override("font_size", 18)
 		price.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-		price.position = Vector2(295, 78 + i * 62)
+		price.position = Vector2(295, 78 + i * 72)
 		price.size = Vector2(90, 62)
 		price.text = price_labels[i]
 		price.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1060,7 +1060,7 @@ func _show_instant_cash_popup():
 	cancel_btn.name = "CancelBtn"
 	cancel_btn.texture_normal = cancel_tex
 	cancel_btn.size = Vector2(200, 50)
-	cancel_btn.position = Vector2(110, 295)
+	cancel_btn.position = Vector2(110, 315)
 	cancel_btn.pressed.connect(_close_instant_cash_popup)
 	cancel_btn.button_down.connect(_on_btn_down.bind(cancel_btn))
 	cancel_btn.button_up.connect(_on_btn_up.bind(cancel_btn))
