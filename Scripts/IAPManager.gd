@@ -7,6 +7,7 @@ const Types = preload("res://addons/godot-iap/types.gd")
 
 signal kedai_unlocked(kedai_id: String, token: String)
 signal kitchen_extended(token: String)
+signal instant_cash_purchased(token: String, sku: String)
 signal extend_kitchen_failed
 signal purchases_restored
 signal restore_completed(found: bool)
@@ -286,6 +287,31 @@ func purchase_extend_kitchen() -> int:
 		_on_purchase_error(request_result)
 	return PurchaseResult.OK
 
+func purchase_instant_cash(cash_sku: String) -> int:
+	var iap = _get_iap()
+	if not iap:
+		return PurchaseResult.UNAVAILABLE
+	if not _initialized:
+		return PurchaseResult.NOT_INITIALIZED
+	if cash_sku.is_empty():
+		return PurchaseResult.NO_SKU
+	if _restore_in_progress:
+		return PurchaseResult.BUSY
+	var props = {
+		"requestPurchase": {
+			"apple": {"sku": cash_sku}
+		},
+		"type": "in-app"
+	}
+	_pending_purchase_sku = cash_sku
+	_purchase_in_progress = true
+	var request_result = iap.request_purchase(props)
+	print("Purchase request result: ", request_result)
+	if request_result is Dictionary and not request_result.get("success", true):
+		_purchase_in_progress = false
+		_on_purchase_error(request_result)
+	return PurchaseResult.OK
+
 func _on_purchase_updated(purchase: Dictionary):
 	_purchase_in_progress = false
 	var product_id = purchase.get("productId", "")
@@ -297,6 +323,8 @@ func _on_purchase_updated(purchase: Dictionary):
 	if product_id == IAPConfig.EXTEND_KITCHEN_SKU:
 		_extend_purchase_pending = false
 		kitchen_extended.emit(token)
+	elif IAPConfig.get_cash_reward(product_id) > 0:
+		instant_cash_purchased.emit(token, product_id)
 	else:
 		for wid in IAPConfig.SKUS:
 			if IAPConfig.SKUS[wid] == product_id:
