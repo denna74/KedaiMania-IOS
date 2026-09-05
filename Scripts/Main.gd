@@ -1628,6 +1628,8 @@ func _on_iap_pressed():
 			_show_iap_status(Lang.t("iap_not_ready"))
 		IAP.PurchaseResult.NO_SKU:
 			_show_iap_status(Lang.t("iap_unavailable"))
+		IAP.PurchaseResult.BUSY:
+			_show_iap_status(Lang.t("iap_busy"))
 
 func _show_iap_status(text: String):
 	if not buy_popup:
@@ -1651,6 +1653,8 @@ func _on_restore_pressed():
 			_show_iap_status(Lang.t("iap_unavailable"))
 		IAP.PurchaseResult.NOT_INITIALIZED:
 			_show_iap_status(Lang.t("iap_not_ready"))
+		IAP.PurchaseResult.BUSY:
+			_show_iap_status(Lang.t("iap_busy"))
 
 func _on_restore_completed(found: bool):
 	if found:

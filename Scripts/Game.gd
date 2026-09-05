@@ -400,6 +400,9 @@ func _on_extend_kitchen_pressed():
 		IAP.PurchaseResult.NO_SKU:
 			ui.toggle_pause()
 			show_extend_error("extend_kitchen_error")
+		IAP.PurchaseResult.BUSY:
+			ui.toggle_pause()
+			show_extend_error("extend_kitchen_error")
 
 func _on_kitchen_extended(token: String):
 	ui.toggle_pause()

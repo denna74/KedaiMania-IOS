@@ -12,7 +12,7 @@ signal purchases_restored
 signal restore_completed(found: bool)
 signal purchase_failed(message: String)
 
-enum PurchaseResult { OK, NOT_INITIALIZED, NO_SKU, UNAVAILABLE }
+enum PurchaseResult { OK, NOT_INITIALIZED, NO_SKU, UNAVAILABLE, BUSY }
 
 var _initialized: bool = false
 var _products_ready: bool = false
@@ -22,6 +22,7 @@ var _pending_purchase_sku: String = ""
 var _pending_restorations: Array[Dictionary] = []
 var _purchases_by_token: Dictionary = {}
 var _restore_in_progress: bool = false
+var _purchase_in_progress: bool = false
 var last_products_status: String = ""
 var _last_products_raw: Dictionary = {}
 var _last_products_native_count: int = 0
@@ -66,6 +67,8 @@ func restore_purchases() -> int:
 		return PurchaseResult.UNAVAILABLE
 	if not _initialized:
 		return PurchaseResult.NOT_INITIALIZED
+	if _purchase_in_progress:
+		return PurchaseResult.BUSY
 	if _restore_in_progress:
 		return PurchaseResult.OK
 	while not _products_ready and _initialized:
@@ -137,7 +140,6 @@ func _fetch_products():
 	if products.size() > 0:
 		_products_ready = true
 		print("Product details loaded: ", products.size(), " products")
-		_check_pending_restorations()
 	else:
 		print("Failed to load product details")
 		if _last_products_native_count == 0 and _last_products_error.is_empty():
@@ -239,6 +241,8 @@ func purchase_kedai(kedai_id: String) -> int:
 	var sku = IAPConfig.get_sku(kedai_id)
 	if sku.is_empty():
 		return PurchaseResult.NO_SKU
+	if _restore_in_progress:
+		return PurchaseResult.BUSY
 	var props = {
 		"requestPurchase": {
 			"apple": {"sku": sku}
@@ -246,9 +250,11 @@ func purchase_kedai(kedai_id: String) -> int:
 		"type": "in-app"
 	}
 	_pending_purchase_sku = sku
+	_purchase_in_progress = true
 	var request_result = iap.request_purchase(props)
 	print("Purchase request result: ", request_result)
 	if request_result is Dictionary and not request_result.get("success", true):
+		_purchase_in_progress = false
 		_on_purchase_error(request_result)
 	return PurchaseResult.OK
 
@@ -261,6 +267,8 @@ func purchase_extend_kitchen() -> int:
 	var sku = IAPConfig.EXTEND_KITCHEN_SKU
 	if sku.is_empty():
 		return PurchaseResult.NO_SKU
+	if _restore_in_progress:
+		return PurchaseResult.BUSY
 	var props = {
 		"requestPurchase": {
 			"apple": {"sku": sku}
@@ -269,14 +277,17 @@ func purchase_extend_kitchen() -> int:
 	}
 	_extend_purchase_pending = true
 	_pending_purchase_sku = sku
+	_purchase_in_progress = true
 	var request_result = iap.request_purchase(props)
 	print("Purchase request result: ", request_result)
 	if request_result is Dictionary and not request_result.get("success", true):
 		_extend_purchase_pending = false
+		_purchase_in_progress = false
 		_on_purchase_error(request_result)
 	return PurchaseResult.OK
 
 func _on_purchase_updated(purchase: Dictionary):
+	_purchase_in_progress = false
 	var product_id = purchase.get("productId", "")
 	var token = purchase.get("transactionId", "")
 	if product_id.is_empty() or token.is_empty():
@@ -293,6 +304,7 @@ func _on_purchase_updated(purchase: Dictionary):
 				break
 
 func _on_purchase_error(error: Dictionary):
+	_purchase_in_progress = false
 	var message = String(error.get("message", error.get("error", "unknown")))
 	var sku = String(error.get("productId", _pending_purchase_sku))
 	if message.to_lower().contains("sku") and not sku.is_empty():
