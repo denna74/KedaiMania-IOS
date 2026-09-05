@@ -1045,7 +1045,7 @@ func _show_instant_cash_popup():
 		price.add_theme_font_override("font", baloo2)
 		price.add_theme_font_size_override("font_size", 18)
 		price.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-		price.position = Vector2(300, 78 + i * 62)
+		price.position = Vector2(295, 78 + i * 62)
 		price.size = Vector2(90, 62)
 		price.text = price_labels[i]
 		price.mouse_filter = Control.MOUSE_FILTER_IGNORE
